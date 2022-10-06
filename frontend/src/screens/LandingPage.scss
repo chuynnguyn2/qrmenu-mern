@@ -1,0 +1,9 @@
+.landing-header{
+    height: 95vh;
+    background-image: linear-gradient(to right bottom, rgba($color-landing-primary-light,0.8), rgba($color-landing-primary-dark,0.8)), url(../images/landing_background.png);
+    background-size: cover;
+    background-position: top;
+
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
