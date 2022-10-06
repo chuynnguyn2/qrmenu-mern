@@ -1,0 +1,22 @@
+{
+  "name": "qrmenu",
+  "version": "1.0.0",
+  "description": "a website for ordering food via qr code",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuynnguyn2/qrmenu.git"
+  },
+  "author": "Chuyen Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chuynnguyn2/qrmenu/issues"
+  },
+  "homepage": "https://github.com/chuynnguyn2/qrmenu#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
