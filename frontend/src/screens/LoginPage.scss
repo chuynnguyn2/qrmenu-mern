@@ -1,0 +1,83 @@
+.login{    
+    height: 100vh;
+    background-image: linear-gradient(to bottom left, transparent 30%,$color-primary-dark 95%), url(../images/login-page-bg.jpg);
+    background-size: cover;
+    text-align: center;
+    position: relative;  
+    color: $color-white;  
+    
+    &_group{  
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba($color-white,.8);
+        height: 3.125rem;
+        width: 50%;
+        border-radius: 1rem;
+        position: relative;    
+        border: 2px solid transparent;
+        &:focus-within{
+            box-shadow: 
+            0 0 .5rem $color-primary,
+            0 0 0.4rem $color-primary,
+            0 0 .5rem $color-primary;
+            color: $color-black;
+            font-weight: 600;
+            
+        }
+        &:not(:last-child){    
+            margin: 2.5rem 0 0 ;
+        }
+    }
+    &_label{
+        font-size: .625rem;
+        position: absolute;
+        top: 0.1rem;
+        left: 1.25rem;   
+        color: $color-grey-dark;   
+    }
+    &_input{                
+        position: absolute;
+        top: 1.25rem;
+        left: 1.25rem;
+        background-color: transparent;
+        border: none;
+        width: 80%;
+        font-size: inherit;
+        font-weight: 300;
+        font-family: inherit;
+
+        &:focus{
+            outline: none;
+        }       
+    } 
+    &_forgot-password{     
+        margin-bottom: 2.5rem;    
+    &-link{     
+    color: $color-white;
+        &:link,
+        &:visited{
+            text-decoration: underline;
+        }
+        &:hover,
+        &:active{
+            color: $color-black;
+        }
+       
+    }
+
+    }      
+}
+.home-link{
+    color: $color-primary;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    font-weight: 700;
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+}
+
+.register{
+    background-image: linear-gradient(to bottom left, transparent 30%,$color-primary-dark 95%), url(../images/login-page-bg-1.jpg);
+}
