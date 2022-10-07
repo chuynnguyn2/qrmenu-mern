@@ -4,6 +4,9 @@ import { Link, NavLink, Route, Routes } from 'react-router-dom'
 import {logout} from '../actions/userActions'
 
 import DashBoardPage from './LoggedScreen/DashBoardPage'
+import RestaurantPage from './LoggedScreen/RestaurantPage'
+import MenuPage from './LoggedScreen/MenuPage'
+import OrderPage from './LoggedScreen/OrderPage'
 
 export const menuItems = [
   {
@@ -18,21 +21,21 @@ export const menuItems = [
     exact: true,
     to: '/restaurant',
     iconClassName: 'fa-solid fa-store',
-    //main: ,
+    main: RestaurantPage ,
   },
   {
     name: 'Menu',
     exact: true,
     to: '/storemenu',
     iconClassName: 'fa-solid fa-clipboard-list',
-   // main: ,
+   main: MenuPage,
   },
   {
     name: 'Orders',
     exact: true,
     to: '/order',
     iconClassName: 'fa-solid fa-list-check',
-   // main: ,
+    main: OrderPage,
   },
 ]
 

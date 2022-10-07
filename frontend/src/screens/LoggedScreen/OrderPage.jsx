@@ -3,10 +3,9 @@ import { Tab, Tabs } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listRestaurants } from '../../actions/restaurantActions'
-import DashRes from '../../components/DashBoardComp/DashRes'
-// import DashRes from '../components/DashRes'
+import Order from '../../components/OrderComp/Order'
 
-const DashBoardPage = () => {
+const OrderPage = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userLogin = useSelector((state) => state.userLogin)
@@ -21,27 +20,18 @@ const DashBoardPage = () => {
     } else {
       dispatch(listRestaurants(userInfo._id))
     }
-  }, [dispatch, navigate, userInfo])
-
+  }, [])
   return (
-    <>
-      <div className='dashboard-hi'>
-        <h3>Xin Chào {userInfo.phone},</h3>
-        <div className='dashboard-hi-profile'>
-          <button className='dark-btn'>Chỉnh sửa thông tin cá nhân</button>
-        </div>
-      </div>
-      <div className='restaurant-section mt-4'>
+    <div className='restaurant-section mt-4'>
         <Tabs id='uncontrolled-tab-example' className='mb-3'>
           {restaurants.map((res) => (
             <Tab eventKey={res.name} title={res.name}>
-              <DashRes restaurant={res} />
+              <Order restaurantId={res._id} />
             </Tab>
           ))}
         </Tabs>
       </div>
-    </>
   )
 }
 
-export default DashBoardPage
+export default OrderPage

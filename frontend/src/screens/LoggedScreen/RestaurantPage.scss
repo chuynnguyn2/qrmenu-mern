@@ -1,0 +1,22 @@
+.restaurant{
+    .restaurant-list{
+        &-stack{
+            background-color: #fff;
+            border-radius: 10px;
+            height: 3.125rem;
+            border-left: 4px solid $color-primary-light;
+            
+            &-text{
+                text-transform: uppercase;
+                border: none;
+                background-color: inherit;                
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width:100%;
+            }
+        }
+    }
+    .restaurant-detail{
+        
+    }
+}

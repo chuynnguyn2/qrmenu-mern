@@ -1,0 +1,61 @@
+.dashboard-hi{    
+    background-image: linear-gradient(to bottom right,$color-primary-light,$color-primary-dark);
+    border-radius: 10px;
+    padding: 1.6rem 0;
+    position: relative;
+
+
+    h3{
+        color: $color-white;
+        position: absolute;
+        top: 50%;
+        left: 1.25rem;
+        transform: translateY(-50%);
+    }
+    &-profile{
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        right: 1.25rem;
+        transform: translateY(-50%);        
+    }
+}
+.restaurant-section{
+    .order-box{
+        margin:auto 6.25rem;
+        height: 5rem;
+        background-color: $color-white;        
+        position: relative;
+        border-radius: 20px;
+        box-shadow: 0 1rem 2.5rem rgba($color-black,.15);
+        &-icon{
+            width: 3.75rem;
+            height: 3.75rem;
+            display: inline-block;
+            font-size: 1.875rem;
+            color: $color-white;
+            text-align: center;
+            background-color: $color-primary;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+        
+    
+        }
+        &-text{
+            padding: .5rem;
+        }
+
+    }
+    
+}
+.calendar{
+    position: fixed;      
+    z-index: 10;
+}
+
+.calendar.hidden{
+    display: none;
+}
