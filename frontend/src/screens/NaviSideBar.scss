@@ -1,0 +1,39 @@
+.side-menu{    
+    height:100%;
+    position: absolute;
+    background: $color-primary-dark;  
+    .main-menu{                                
+                .menu-item{
+                    color: $color-white;
+                    font-weight: 300;
+                    cursor: pointer;       
+                    
+                    .menu-icon{ 
+                        font-size: x-large;
+                    }
+                }
+                .menu-item.active{
+                    border-radius: 10px;
+                    color: $color-primary;
+                    background-color: $color-white;
+                }
+    }          
+    
+    .side-menu-btn{
+        width: 100%;
+        text-align: center;
+        background: $color-black;
+        position: absolute;
+        bottom: 0;
+        left: 0;        
+        box-sizing: border-box;        
+        cursor: pointer;   
+
+        &:hover,
+        &::after{
+            background-color: $color-grey-dark;
+            color: $color-white;
+        }
+    }
+    
+}

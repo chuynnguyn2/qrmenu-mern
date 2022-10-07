@@ -6,10 +6,13 @@ import LandingPage from './screens/LandingPage'
 import LoginPage from './screens/LoginPage'
 import RegisterPage from './screens/RegisterPage'
 
+import NaviSideBar from './screens/NaviSideBar'
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+    <NaviSideBar/>
+      <Routes>        
         <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { Button, Tab, Tabs } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { listRestaurants } from '../actions/restaurantActions'
-import DashRes from '../components/DashRes'
+import { listRestaurants } from '../../actions/restaurantActions'
+// import DashRes from '../components/DashRes'
 
 const DashBoardPage = () => {
   const navigate = useNavigate()
@@ -30,7 +29,7 @@ const DashBoardPage = () => {
           <button className='dark-btn'>Chỉnh sửa thông tin cá nhân</button>
         </div>
       </div>
-      <div className='restaurant-section mt-4'>
+      {/* <div className='restaurant-section mt-4'>
         <Tabs id='uncontrolled-tab-example' className='mb-3'>
           {restaurants.map((res) => (
             <Tab eventKey={res.name} title={res.name}>
@@ -38,7 +37,7 @@ const DashBoardPage = () => {
             </Tab>
           ))}
         </Tabs>
-      </div>
+      </div> */}
     </>
   )
 }
