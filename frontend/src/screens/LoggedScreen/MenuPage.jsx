@@ -1,17 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Tab, Tabs } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import MenuDetail from '../../components/MenuComp/MenuDetail'
 
 const MenuPage = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
-
   const items = JSON.parse(localStorage.getItem('restaurantList'))
-  const [selectRes, setSelectRes] = useState(items[0])
 
   return (
     <div className='menu-screen'>

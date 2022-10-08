@@ -60,5 +60,4 @@ const MenuDetail = ({ restaurant }) => {
     </div>
   )
 }
-
 export default MenuDetail
