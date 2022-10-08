@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
 
 const MenuDetail = ({ restaurant }) => {
-  //const Grid = WidthProvider(GridLayout)
-  const layouts = [
-    { i: 'a', x: 0, y: 0, w: 1, h: 2 },
-    { i: 'b', x: 1, y: 0, w: 3, h: 1 },
-    { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-  ]
+  const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const listCategory = useSelector((state)=>state.categoryList)
+  const {loading, error, categories} = listCategory
+
+  useEffect(() => {
+    if (userInfo === null) {
+      navigate('/login')
+    } else {
+      dispatch(listCategories(restaurant._id))
+    }
+  }, [dispatch, navigate, restaurant._id, userInfo])
+
+
   return (
     <div className='menu-detail'>
       <div>
@@ -29,12 +43,11 @@ const MenuDetail = ({ restaurant }) => {
               <span className='span-large'>
                 <strong>Danh Mục Món Ăn</strong>
               </span>
+              {categories.map((cat)=>(
+                <span>{cat.name}</span>
+              ))}
             </Row>
-            {/* <GridLayout className='layout' layout={layouts}>
-              <div key='1'>{restaurant.name} 1</div>
-              <div key='2'>{restaurant.name} 2</div>
-              <div key='3'>{restaurant.name} 3</div>
-            </GridLayout> */}
+            
           </Col>
           <Col
             className='menu-detail-food'
