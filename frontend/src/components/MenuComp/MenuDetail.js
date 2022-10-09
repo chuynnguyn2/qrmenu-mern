@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
 
-const MenuDetail = ({ restaurant }) => {
+const MenuDetail = ({ restaurantId }) => {
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
@@ -18,16 +18,12 @@ const MenuDetail = ({ restaurant }) => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listCategories(restaurant._id))
+      dispatch(listCategories(restaurantId))
     }
-  }, [dispatch, navigate, restaurant._id, userInfo])
+  }, [dispatch, navigate, restaurantId, userInfo])
 
 
-  return (
-    <div className='menu-detail'>
-      <div>
-        Menu của nhà hàng <strong>{restaurant.name}</strong>
-      </div>
+  return (         
       <Container fluid>
         <Row style={{ margin: '0', maxWidth: '100%' }}>
           <Col
@@ -46,8 +42,7 @@ const MenuDetail = ({ restaurant }) => {
               {categories.map((cat)=>(
                 <span>{cat.name}</span>
               ))}
-            </Row>
-            
+            </Row>            
           </Col>
           <Col
             className='menu-detail-food'
@@ -70,7 +65,6 @@ const MenuDetail = ({ restaurant }) => {
           </Col>
         </Row>
       </Container>
-    </div>
   )
 }
 export default MenuDetail
