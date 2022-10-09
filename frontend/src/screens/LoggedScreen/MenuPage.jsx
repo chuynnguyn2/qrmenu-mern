@@ -1,10 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { listCategories } from '../../actions/categoryActions'
 import MenuDetail from '../../components/MenuComp/MenuDetail'
 
 const MenuPage = () => {
   const restaurants = JSON.parse(localStorage.getItem('restaurantList'))
   const [selectResId, setSelectResId] = useState(restaurants[0]._id)
+  const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  
+   
+  useEffect(() => {
+    if (userInfo === null) {
+      navigate('/login')
+    } else {
+      dispatch(listCategories(selectResId))
+    }
+  }, [dispatch, navigate, selectResId, userInfo])
 
   return (
     <div className='menu-screen'>
@@ -20,7 +37,7 @@ const MenuPage = () => {
           </Form.Select>
         </Form.Group>
       </div>
-      <MenuDetail restaurantId={selectResId}></MenuDetail>
+      <MenuDetail></MenuDetail>
     </div>
   )
 }

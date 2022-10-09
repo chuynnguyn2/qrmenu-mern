@@ -8,7 +8,7 @@ import Restaurant from '../models/restaurantModel.js'
 const getCategories = asyncHandler(async (req, res) => {
   let filter = { restaurant: req.query.restaurant }
   const categories = await Category.find(filter).sort({index:1})
-  res.json(categories)
+  res.json(categories)  
 })
 
 // @desc    Create category

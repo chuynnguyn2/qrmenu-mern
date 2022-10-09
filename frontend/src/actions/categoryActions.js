@@ -36,6 +36,8 @@ export const listCategories = (restaurantId) => async (dispatch, getState) => {
       type: CATEGORY_LIST_SUCCESS,
       payload: data,
     })
+    localStorage.removeItem('categoryList')
+    localStorage.setItem('categoryList', JSON.stringify(data))
   } catch (error) {
     dispatch({
       type: CATEGORY_LIST_FAIL,

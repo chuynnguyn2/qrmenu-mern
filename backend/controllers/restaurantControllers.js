@@ -10,7 +10,7 @@ const getRestaurants = asyncHandler(async (req, res) => {
 
   const restaurants = await Restaurant.find(filter).populate('user')
   res.json(restaurants)
-})
+}) 
 
 // // @desc    Fetch single category
 // // @route   GET /api/restaurant/restaurantId

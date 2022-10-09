@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
 
-const MenuDetail = ({ restaurantId }) => {
-  const navigate = useNavigate()
+const MenuDetail = () => {  
+  //const categories = JSON.parse(localStorage.getItem('categoryList')) 
+  const [category, setCategory] = useState(JSON.parse(localStorage.getItem('categoryList')) )  
 
-  const dispatch = useDispatch()
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
-
-  const listCategory = useSelector((state)=>state.categoryList)
-  const {loading, error, categories} = listCategory
-
-  useEffect(() => {
-    if (userInfo === null) {
-      navigate('/login')
-    } else {
-      dispatch(listCategories(restaurantId))
-    }
-  }, [dispatch, navigate, restaurantId, userInfo])
-
+  const dragEnd=(result)=>{
+      const categoryItems = [...category]
+      const [orderedCategory] = categoryItems.slice(result.source.index, 1)
+      categoryItems.slice(result.destination.index, 0, orderedCategory)
+      setCategory(categoryItems)
+      console.log('first')
+  }    
 
   return (         
       <Container fluid>
@@ -35,14 +29,28 @@ const MenuDetail = ({ restaurantId }) => {
             xs={4}
             xxl={4}
           >
-            <Row className='u-margin-bottom-small'>
-              <span className='span-large'>
+          <span className='span-large'>
                 <strong>Danh Mục Món Ăn</strong>
               </span>
-              {categories.map((cat)=>(
-                <span>{cat.name}</span>
+          <DragDropContext onDragEnd={dragEnd}>
+          <Droppable 
+          droppableId='dropSequence'
+          direction='vertical'
+          type='column'>
+          {(provided)=>(<Row className='u-margin-bottom-small' {...provided.droppableProps} ref={provided.innerRef}>
+              
+              {category.map((cat,index)=>(
+                <Draggable draggableId={`draggable-${index}`} key={`draggable-${index}`} index={index}>
+                {(provided)=>(
+                  <span {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{cat.name}</span>
+                  )}                
+                </Draggable>
               ))}
-            </Row>            
+              {provided.placeholder}
+            </Row> )}
+            
+            </Droppable>
+            </DragDropContext>           
           </Col>
           <Col
             className='menu-detail-food'
