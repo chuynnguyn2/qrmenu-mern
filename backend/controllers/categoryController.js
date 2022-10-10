@@ -6,20 +6,20 @@ import Restaurant from '../models/restaurantModel.js'
 // @route   GET /api/category?restaurant
 //@access   Private
 const getCategories = asyncHandler(async (req, res) => {
-  let filter = { restaurant: req.query.restaurant }
+  let filter = { user: req.query.user }
   const categories = await Category.find(filter).sort({index:1})
-  res.json(categories)  
+  res.json(categories)
 })
 
 // @desc    Create category
 // @route   POST /api/category?restaurant
 //@access   Private
 const createCategory = asyncHandler(async (req, res) => {
-  const restaurantExist = Restaurant.findById(req.body.restaurant)
+  const userExist = User.findById(req.body.user)
 
-  if (!restaurantExist) {
+  if (!userExist) {
     res.status(400)
-    throw new Error('Invalid Restaurant')
+    throw new Error('Invalid User')
   }
 
   const { restaurant, name } = req.body
@@ -31,14 +31,14 @@ const createCategory = asyncHandler(async (req, res) => {
     throw new Error('Category already exists')
   }
   const category = await Category.create({
-    restaurant,
+    user,
     name,
   })
 
   if (category) {
     res.status(201).json({
       _id: category._id,
-      restaurant: category.restaurant,
+      user: category.user,
       name: category.name,
     })
   } else {
@@ -46,6 +46,38 @@ const createCategory = asyncHandler(async (req, res) => {
     throw new Error('Invalid category data')
   }
 })
+// const createCategory = asyncHandler(async (req, res) => {
+//   const restaurantExist = Restaurant.findById(req.body.restaurant)
+
+//   if (!restaurantExist) {
+//     res.status(400)
+//     throw new Error('Invalid Restaurant')
+//   }
+
+//   const { restaurant, name } = req.body
+
+//   const categoryExists = await Category.findOne({ name })
+
+//   if (categoryExists) {
+//     res.status(400)
+//     throw new Error('Category already exists')
+//   }
+//   const category = await Category.create({
+//     restaurant,
+//     name,
+//   })
+
+//   if (category) {
+//     res.status(201).json({
+//       _id: category._id,
+//       restaurant: category.restaurant,
+//       name: category.name,
+//     })
+//   } else {
+//     res.status(400)
+//     throw new Error('Invalid category data')
+//   }
+// })
 
 // @desc    Delete a category
 // @route   DELETE /api/category/:categoryId

@@ -5,19 +5,36 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
 
-const MenuDetail = () => {  
+const MenuDetail = (resId) => {  
   //const categories = JSON.parse(localStorage.getItem('categoryList')) 
-  const [category, setCategory] = useState(JSON.parse(localStorage.getItem('categoryList')) )  
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin 
 
-  const dragEnd=(result)=>{
+  const categories = useSelector((state)=>state.categoryList)
+  const {loading, error, car} = categories   
+    
+  const [category, setCategory] = useState(car)
+
+    const dragEnd=(result)=>{
       const categoryItems = [...category]
       const [orderedCategory] = categoryItems.slice(result.source.index, 1)
       categoryItems.slice(result.destination.index, 0, orderedCategory)
       setCategory(categoryItems)
       console.log('first')
-  }    
+    }  
 
-  return (         
+  useEffect(()=>{
+    if (userInfo === null) {
+      navigate('/login')
+    } else {
+      dispatch(listCategories(resId))
+    }    
+  },[car, dispatch, navigate, resId, userInfo])
+
+  return (   
+    
       <Container fluid>
         <Row style={{ margin: '0', maxWidth: '100%' }}>
           <Col
@@ -39,14 +56,14 @@ const MenuDetail = () => {
           type='column'>
           {(provided)=>(<Row className='u-margin-bottom-small' {...provided.droppableProps} ref={provided.innerRef}>
               
-              {category.map((cat,index)=>(
+              {/* {category.map((cat,index)=>(
                 <Draggable draggableId={`draggable-${index}`} key={`draggable-${index}`} index={index}>
                 {(provided)=>(
                   <span {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{cat.name}</span>
                   )}                
                 </Draggable>
               ))}
-              {provided.placeholder}
+              {provided.placeholder} */}
             </Row> )}
             
             </Droppable>
@@ -72,7 +89,9 @@ const MenuDetail = () => {
             </Row>
           </Col>
         </Row>
-      </Container>
+      </Container>        
   )
 }
+
+
 export default MenuDetail

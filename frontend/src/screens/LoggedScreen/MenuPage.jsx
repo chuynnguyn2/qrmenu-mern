@@ -8,12 +8,11 @@ import MenuDetail from '../../components/MenuComp/MenuDetail'
 const MenuPage = () => {
   const restaurants = JSON.parse(localStorage.getItem('restaurantList'))
   const [selectResId, setSelectResId] = useState(restaurants[0]._id)
+  
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
   const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
-  
+  const { userInfo } = userLogin  
    
   useEffect(() => {
     if (userInfo === null) {
@@ -37,7 +36,7 @@ const MenuPage = () => {
           </Form.Select>
         </Form.Group>
       </div>
-      <MenuDetail></MenuDetail>
+      <MenuDetail resId = {selectResId}></MenuDetail>
     </div>
   )
 }

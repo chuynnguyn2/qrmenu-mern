@@ -25,20 +25,23 @@ const importData = async () => {
     const createdUser = await User.insertMany(users)
     const createdUserId = createdUser[0]._id
 
+    
     const restaurantList = restaurants.map((restaurant) => {
       return { ...restaurant, user: createdUserId }
     })
     const createdRestaurants = await Restaurant.insertMany(restaurantList)
     const createdRestaurant = createdRestaurants[0]._id
 
-    const categoriesList = categories.map((category) => {
-      return { ...category, restaurant: createdRestaurant }
-    })
 
+    const categoriesList = categories.map((category) => {
+      return { ...category, user: createdUserId, restaurant: createdRestaurant }
+    })
     const createdCategories = await Category.insertMany(categoriesList)
     const createdCategory = createdCategories[0]._id
+
+
     const productList = products.map((product) => {
-      return { ...product, category: createdCategory, restaurant: createdRestaurant }
+      return { ...product, user: createdUserId , category: createdCategory, restaurant: createdRestaurant }
     })
     await Product.insertMany(productList)
 

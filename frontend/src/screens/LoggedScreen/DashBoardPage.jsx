@@ -3,7 +3,9 @@ import { Tab, Tabs } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listRestaurants } from '../../actions/restaurantActions'
+import { listCategories } from '../../actions/categoryActions'
 import DashRes from '../../components/DashBoardComp/DashRes'
+
 // import DashRes from '../components/DashRes'
 
 const DashBoardPage = () => {
@@ -20,6 +22,7 @@ const DashBoardPage = () => {
       navigate('/login')
     } else {
       dispatch(listRestaurants(userInfo._id))
+      dispatch(listCategories(userInfo._id))
     }
   }, [dispatch, navigate, userInfo])
 
