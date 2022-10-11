@@ -3,7 +3,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { listCategories } from '../../actions/categoryActions'
+import { listCategories, updateCategory } from '../../actions/categoryActions'
 
 const MenuDetail = (resId) => {  
   //const categories = JSON.parse(localStorage.getItem('categoryList')) 
@@ -12,17 +12,22 @@ const MenuDetail = (resId) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin 
 
-  const categories = useSelector((state)=>state.categoryList)
-  const {loading, error, car} = categories   
-    
-  const [category, setCategory] = useState(car)
+  const categories = JSON.parse(localStorage.getItem('categoryList'))
+      
+  const [category, setCategory] = useState(categories.filter((cat)=>cat.restaurant===resId.resId))
+
 
     const dragEnd=(result)=>{
       const categoryItems = [...category]
-      const [orderedCategory] = categoryItems.slice(result.source.index, 1)
-      categoryItems.slice(result.destination.index, 0, orderedCategory)
+      const [orderedCategory] = categoryItems.splice(result.source.index, 1)
+      categoryItems.splice(result.destination.index, 0, orderedCategory)
+      console.log(categoryItems)
       setCategory(categoryItems)
-      console.log('first')
+      const items = categoryItems.map((item, index)=>({...item, index:`${index}`}))
+      console.log(items)
+      items.map(item=>dispatch(updateCategory(item)))
+      localStorage.removeItem('categoryList')
+      localStorage.setItem('categoryList', JSON.stringify(items))
     }  
 
   useEffect(()=>{
@@ -31,7 +36,8 @@ const MenuDetail = (resId) => {
     } else {
       dispatch(listCategories(resId))
     }    
-  },[car, dispatch, navigate, resId, userInfo])
+    setCategory(categories.filter((cat)=>cat.restaurant===resId.resId))
+  },[dispatch, navigate, resId, userInfo])
 
   return (   
     
@@ -56,14 +62,14 @@ const MenuDetail = (resId) => {
           type='column'>
           {(provided)=>(<Row className='u-margin-bottom-small' {...provided.droppableProps} ref={provided.innerRef}>
               
-              {/* {category.map((cat,index)=>(
+              {category.map((cat,index)=>(
                 <Draggable draggableId={`draggable-${index}`} key={`draggable-${index}`} index={index}>
                 {(provided)=>(
                   <span {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{cat.name}</span>
                   )}                
                 </Draggable>
               ))}
-              {provided.placeholder} */}
+              {provided.placeholder}
             </Row> )}
             
             </Droppable>

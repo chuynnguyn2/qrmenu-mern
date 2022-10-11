@@ -99,11 +99,13 @@ const deleteCategory = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const updateCategory = asyncHandler(async (req, res) => {
   const { name } = req.body
+  const { index } = req.body
 
   const category = await Category.findById(req.params.categoryId)
 
   if (category) {
     category.name = name || category.name
+    category.index = index || category.index
 
     const updatedCategory = await category.save()
     res.json(updatedCategory)

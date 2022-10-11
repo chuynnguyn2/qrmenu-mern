@@ -18,7 +18,7 @@ const MenuPage = () => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listCategories(selectResId))
+      //dispatch(listCategories(selectResId))
     }
   }, [dispatch, navigate, selectResId, userInfo])
 
