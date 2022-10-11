@@ -84,7 +84,7 @@ const ResDetailInfo = ({ restaurant }) => {
             <Form.Control
               id='res-name'
               disabled={!editable}
-              defaultValue={restaurant.name}
+              value={editName}
               onChange={(e) => {
                 setEditName(e.target.value)
               }}
@@ -117,7 +117,7 @@ const ResDetailInfo = ({ restaurant }) => {
               id='res-address'
               disabled={!editable}
               as='textarea'
-              defaultValue={restaurant.address}
+              value={editAddress}
               onChange={(e) => {
                 setEditAddress(e.target.value)
               }}
@@ -149,7 +149,7 @@ const ResDetailInfo = ({ restaurant }) => {
             <Form.Control
               id='res-phone'
               disabled={!editable}
-              defaultValue={restaurant.phone}
+              value={editPhone}
               onChange={(e) => {
                 setEditPhone(e.target.value)
               }}
@@ -168,22 +168,33 @@ const ResDetailInfo = ({ restaurant }) => {
       </div>
       <div className='d-flex justify-content-end my-2'>
         {editable ? (
-          <button
-            onClick={() => {
-              setEditable(!editable)
-              dispatch(
-                updateRestaurant({
-                  _id: restaurant._id,
-                  name: editName,
-                  address: editAddress,
-                  phone: editPhone,
-                })
-              )
-            }}
-            className='light-btn py-1'
-          >
-            Lưu
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setEditable(!editable)
+                dispatch(
+                  updateRestaurant({
+                    _id: restaurant._id,
+                    name: editName,
+                    address: editAddress,
+                    phone: editPhone,
+                  })
+                )
+              }}
+              className='light-btn py-1 mx-2'
+            >
+              Lưu
+            </button>
+            <button
+              className='light-btn py-1 mx-2'
+              onClick={() => {
+                setEditable(!editable)
+                setEditAddress(restaurant.address)
+              }}
+            >
+              Hủy
+            </button>
+          </div>
         ) : (
           <>
             <button

@@ -18,7 +18,7 @@ import ResDetailInfo from './ResDetailInfo'
 import ResDetailTable from './ResDetailTable'
 
 const RestaurantDetail = ({ restaurant }) => {
-  const [key, setKey] = useState('tables')  
+  const [key, setKey] = useState('tables')
 
   return (
     <div className='restaurant-detail'>

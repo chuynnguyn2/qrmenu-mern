@@ -21,9 +21,7 @@ export const listRestaurants = (userId) => async (dispatch) => {
     dispatch({
       type: RESTAURANT_LIST_SUCCESS,
       payload: data,
-    }) 
-    localStorage.removeItem('restaurantList')
-    localStorage.setItem('restaurantList', JSON.stringify(data))
+    })
   } catch (error) {
     dispatch({
       type: RESTAURANT_LIST_FAIL,

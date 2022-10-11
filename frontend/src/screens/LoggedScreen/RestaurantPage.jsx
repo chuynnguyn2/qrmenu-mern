@@ -14,7 +14,10 @@ import {
   Spinner,
   Stack,
 } from 'react-bootstrap'
-import { listRestaurants, restaurantCreate } from '../../actions/restaurantActions'
+import {
+  listRestaurants,
+  restaurantCreate,
+} from '../../actions/restaurantActions'
 import Message from '../../components/Message'
 import { useNavigate } from 'react-router-dom'
 import RestaurantDetail from '../../components/RestaurantComp/RestaurantDetail'
