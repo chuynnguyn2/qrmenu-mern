@@ -10,7 +10,7 @@ const getProducts = asyncHandler(async (req, res) => {
   if (req.query.category) {
     filter = { category: req.query.category }
   }
-  const products = await Product.find(filter).populate('category')
+  const products = await Product.find(filter).sort({isFeatured:-1})
   res.json(products)
 })
 
