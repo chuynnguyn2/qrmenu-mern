@@ -7,10 +7,10 @@ import Category from '../models/categoryModel.js'
 //@access   Public
 const getProducts = asyncHandler(async (req, res) => {
   let filter = {}
-  if (req.query.restaurant) {
-    filter = { restaurant: req.query.restaurant }
+  if (req.query.category) {
+    filter = { category: req.query.category }
   }
-  const products = await Product.find(filter).populate('restaurant')
+  const products = await Product.find(filter).populate('category')
   res.json(products)
 })
 

@@ -25,7 +25,7 @@ const MenuPage = () => {
   return (
     <div className='menu-screen'>
       <h3>Quản lý Menu của bạn</h3>
-      <div className='restaurant-section mt-4'>
+      <div className='restaurant-section mt-4 u-margin-bottom-small'>
         <Form.Group controlId='selectRes'>
           <Form.Label >Bạn đang xem Menu của nhà hàng</Form.Label> {' '}
           <Form.Select value= {selectResId}onChange={(e)=>{setSelectResId(e.target.value)

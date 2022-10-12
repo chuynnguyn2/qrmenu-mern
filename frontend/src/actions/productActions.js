@@ -13,7 +13,7 @@ import {
 } from '../constants/productConstants'
 import axios from 'axios'
 
-export const listProducts = (restaurantId) => async (dispatch, getState) => {
+export const listProducts = (categoryId) => async (dispatch, getState) => {
   // const {
   //   userLogin: { userInfo },
   // } = getState()
@@ -28,7 +28,7 @@ export const listProducts = (restaurantId) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST })
     const { data } = await axios.get(
-      `/api/product?restaurant=${restaurantId}`,
+      `/api/product?category=${categoryId}`,
       config
     )
     dispatch({

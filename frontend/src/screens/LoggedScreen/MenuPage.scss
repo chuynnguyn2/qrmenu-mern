@@ -1,0 +1,38 @@
+.menu-screen{
+    .menu-detail-food{
+        font-size: small;
+        &-row{
+            height: 3rem;
+            overflow: hidden;
+            &-des{
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            &-img{
+                border-radius: 10px;
+            }
+            &-featured{
+                font-weight: bold;
+                color: red;
+            }
+        }
+    }
+    .menu-list-stack{
+        
+            background-color: #fff;
+            border-radius: 10px;
+            height: 3.125rem;
+            border-left: 4px solid $color-primary-light;
+                          
+            &-text{
+                    border: none;
+                    background-color: inherit;                
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width:100%;
+                    text-align: left;
+            }
+    
+            
+    }
+}

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Stack } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories, updateCategory } from '../../actions/categoryActions'
+import { listProducts } from '../../actions/productActions'
 
 const MenuDetail = (resId) => {  
   //const categories = JSON.parse(localStorage.getItem('categoryList')) 
@@ -15,6 +16,10 @@ const MenuDetail = (resId) => {
   const categories = JSON.parse(localStorage.getItem('categoryList'))
       
   const [category, setCategory] = useState(categories.filter((cat)=>cat.restaurant===resId.resId))
+  const product = useSelector((state)=>state.productList)
+  const {loading, error, products} = product
+
+  console.log(product)
 
 
     const dragEnd=(result)=>{
@@ -45,12 +50,12 @@ const MenuDetail = (resId) => {
         <Row style={{ margin: '0', maxWidth: '100%' }}>
           <Col
             className='menu-detail-categories-list me-4'
-            lg={4}
-            md={4}
-            sm={4}
-            xl={4}
-            xs={4}
-            xxl={4}
+            lg={3}
+            md={3}
+            sm={3}
+            xl={3}
+            xs={3}
+            xxl={3}
           >
           <span className='span-large'>
                 <strong>Danh Mục Món Ăn</strong>
@@ -65,7 +70,12 @@ const MenuDetail = (resId) => {
               {category.map((cat,index)=>(
                 <Draggable draggableId={`draggable-${index}`} key={`draggable-${index}`} index={index}>
                 {(provided)=>(
-                  <span {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{cat.name}</span>
+                  <Stack direction='horizontal'
+                      className='menu-list-stack my-3' gap={2} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                  <i className='fa-solid fa-up-down-left-right'></i>
+                  <button className='menu-list-stack-text' 
+                   onClick = {()=>{dispatch(listProducts(cat._id))}}>{cat.name}</button>
+                  </Stack>
                   )}                
                 </Draggable>
               ))}
@@ -73,16 +83,22 @@ const MenuDetail = (resId) => {
             </Row> )}
             
             </Droppable>
-            </DragDropContext>           
+            </DragDropContext>  
+            {category.length>0 && 
+            <span style={{fontSize:'small'}}>
+                <strong>Lưu ý: </strong>
+                <span> Nhấn kéo thả hình mũi tên trên danh mục để sắp xếp lại thứ tự danh mục, thứ tự này sẽ xuất hiện trên Menu dành cho khách hàng</span>
+              </span>   
+            }     
           </Col>
           <Col
             className='menu-detail-food'
-            lg={7}
-            md={7}
-            sm={7}
-            xl={7}
-            xs={7}
-            xxl={7}
+            lg={8}
+            md={8}
+            sm={8}
+            xl={8}
+            xs={8}
+            xxl={8}
             style={{ backgroundColor: '#fff' }}
           >
             <Row
@@ -90,9 +106,22 @@ const MenuDetail = (resId) => {
               style={{ textAlign: 'center' }}
             >
               <span className='span-large'>
-                <strong>Thông Tin Món Ăn</strong>
+                <strong>Danh sách Món Ăn</strong>
               </span>
-            </Row>
+              </Row>
+              {products.map((pro)=>(<>
+                {category.length>0 &&(<>
+              <Row className='menu-detail-food-row'>
+              <Col className=' col-1'><img src={pro.image} alt={pro.name} className='menu-detail-food-row-img img-fluid'></img></Col>
+              <Col className='col-3'><span className='menu-detail-food-row-name'>{pro.name}</span></Col>
+              <Col className=''><span className='menu-detail-food-row-des'>{pro.description}</span></Col>
+              <Col className='col-1'><span className='menu-detail-food-row-price'>{pro.price}</span></Col>
+              <Col className='col-1'><span className='menu-detail-food-row-featured'>{pro.isFeatured ? (<>HOT</>): null}</span></Col>                           
+              </Row>
+              <hr></hr>
+              </>)}
+             
+              </>))}            
           </Col>
         </Row>
       </Container>        
