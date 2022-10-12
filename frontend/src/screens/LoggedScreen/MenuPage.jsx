@@ -3,23 +3,42 @@ import { Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
+import { listRestaurants } from '../../actions/restaurantActions'
 import MenuDetail from '../../components/MenuComp/MenuDetail'
 
-const MenuPage = () => {
-  const restaurants = JSON.parse(localStorage.getItem('restaurantList'))
-  const [selectResId, setSelectResId] = useState(restaurants[0]._id)
+const MenuPage = () => {  
+  const res = useSelector((state)=>state.restaurantList)
+  const {loading, success, restaurants} = res
+  const [selectResId, setSelectResId] = useState()
+
+  const cats = useSelector((state)=>state.categoryList)
+  const {loading:loadingCat, error:errorCat, categories} = cats
+
+  console.log(categories)
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const createCat = useSelector((state) => state.createCategory)
+  const {
+    loading: loadingCreateCat,
+    success: successCreateCat,
+    createCategory: createCate,
+  } = createCat
+  
   useEffect(() => {
     if (userInfo === null) {
       navigate('/login')
     } else {
+      dispatch(listRestaurants(userInfo._id))      
+    }    
+    if (successCreateCat) {
+      dispatch(listCategories(selectResId))            
+      //setCategory(categories.filter((cat) => cat.restaurant === resId.resId))      
     }
-  }, [dispatch, navigate, selectResId, userInfo])
+  }, [dispatch, navigate, selectResId, successCreateCat, userInfo])
 
   return (
     <div className='menu-screen'>
@@ -31,16 +50,18 @@ const MenuPage = () => {
             value={selectResId}
             onChange={(e) => {
               setSelectResId(e.target.value)
+              dispatch(listCategories(e.target.value))
             }}
             style={{ display: 'inline-block', width: '10%' }}
-          >
-            {restaurants.map((res) => (
+          >          
+          <option value={0}>Chọn Nhà Hàng</option>
+            {restaurants.map((res, index) => (
               <option value={res._id}>{res.name}</option>
             ))}
           </Form.Select>
         </Form.Group>
-      </div>
-      <MenuDetail resId={selectResId}></MenuDetail>
+      </div>      
+      {(categories && categories.length>0)&&(<MenuDetail resId={selectResId}></MenuDetail>)}
     </div>
   )
 }

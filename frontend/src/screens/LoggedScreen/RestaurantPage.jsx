@@ -232,7 +232,7 @@ const RestaurantPage = () => {
               </Col>
             </Row>
           </Container>
-        </>
+        </> 
       )}
     </div>
   )

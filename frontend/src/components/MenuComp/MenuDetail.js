@@ -22,28 +22,20 @@ import {
 } from '../../actions/categoryActions'
 import { listProducts } from '../../actions/productActions'
 
-const MenuDetail = (resId) => {
-  //const categories = JSON.parse(localStorage.getItem('categoryList'))
+const MenuDetail = (resId) => {  
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
+  const cats = useSelector((state)=>state.categoryList)
+  const {loading:loadingCat, error:errorCat, categories} = cats
+
   const [addCatModal, setAddCatModal] = useState(false)
-  const [addCatName, setaddCatName] = useState()
-  const createCat = useSelector((state) => state.createCategory)
-  const {
-    loading: loadingCreateCat,
-    success: successCreateCat,
-    createCategory: createCate,
-  } = createCat
+  const [addCatName, setaddCatName] = useState()  
 
-  const cats = useSelector((state) => state.categoryList)
-  const { loading: loadingCat, success: successCat, categories } = cats
-  console.log(categories)
-
-  const [category, setCategory] = useState(
-    categories.filter((cat) => cat.restaurant === resId.resId)
-  )
+  const [category, setCategory] = useState(categories)  
+  
   const product = useSelector((state) => state.productList)
   const { loading, error, products } = product
 
@@ -57,24 +49,13 @@ const MenuDetail = (resId) => {
       index: `${index}`,
     }))
     items.map((item) => dispatch(updateCategory(item)))
-    localStorage.removeItem('categoryList')
-    localStorage.setItem('categoryList', JSON.stringify(items))
   }
-  console.log(category)
+ 
 
-  useEffect(() => {
-    if (userInfo === null) {
-      navigate('/login')
-    } else {
-      //dispatch(listCategories(userInfo._id))
-    }
-    if (successCreateCat) {
-      dispatch(listCategories(userInfo._id))
-
-      setAddCatModal(false)
-    }
-    setCategory(categories.filter((cat) => cat.restaurant === resId.resId))
-  }, [dispatch, navigate, resId, userInfo, successCreateCat, categories])
+  useEffect(() => {       
+    setCategory(categories)    
+    
+  }, [dispatch, navigate, userInfo])
 
   return (
     <Container fluid>
@@ -261,15 +242,10 @@ const MenuDetail = (resId) => {
                   category.length,
                   userInfo._id
                 )
-              )
-              // const cates = category.push({
-              //   name: addCatName,
-              //   restaurant: resId.resId,
-              //   index: category.length,
-              //   user: userInfo._id,
-              // })
-              // setCategory(cates)
-            }}
+              )              
+              setAddCatModal(false)
+            }
+            }
           >
             Thêm
           </Button>

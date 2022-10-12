@@ -21,8 +21,7 @@ const DashBoardPage = () => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listRestaurants(userInfo._id))
-      dispatch(listCategories(userInfo._id))
+      dispatch(listRestaurants(userInfo._id))      
     }
   }, [dispatch, navigate, userInfo])
 

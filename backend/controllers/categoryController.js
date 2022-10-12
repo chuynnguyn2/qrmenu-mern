@@ -7,7 +7,7 @@ import User from '../models/userModel.js'
 // @route   GET /api/category?restaurant
 //@access   Private
 const getCategories = asyncHandler(async (req, res) => {
-  let filter = { user: req.query.user }
+  let filter = { restaurant: req.query.restaurant }
   const categories = await Category.find(filter).sort({ index: 1 })
   res.json(categories)
 })

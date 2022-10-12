@@ -14,11 +14,11 @@ import {
 } from '../constants/categoryConstants'
 import axios from 'axios'
 
-export const listCategories = (userId) => async (dispatch, getState) => {
+export const listCategories = (restaurant) => async (dispatch, getState) => {
   // const {
   //   userLogin: { userInfo },
   // } = getState()
-
+ 
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export const listCategories = (userId) => async (dispatch, getState) => {
 
   try {
     dispatch({ type: CATEGORY_LIST_REQUEST })
-    const { data } = await axios.get(`/api/category?user=${userId}`, config)
+    const { data } = await axios.get(`/api/category?restaurant=${restaurant}`, config)
     dispatch({
       type: CATEGORY_LIST_SUCCESS,
       payload: data,
