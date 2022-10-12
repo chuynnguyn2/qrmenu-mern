@@ -26,7 +26,7 @@ const ResDetailTable = ({ restaurant }) => {
   const [wifi, setWifi] = useState(restaurant.wifi)
   const [password, setPassword] = useState(restaurant.password)
   const updatedRestaurant = useSelector((state) => state.editRestaurant)
-  const { loading, success, erroe, updateRes } = updatedRestaurant
+  const { loading, success, error, updateRes } = updatedRestaurant
 
   let tableLinks = []
   for (let i = 1; i <= tableNo; i++) {

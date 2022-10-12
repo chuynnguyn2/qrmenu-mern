@@ -1,13 +1,14 @@
 import asyncHandler from 'express-async-handler'
 import Category from '../models/categoryModel.js'
 import Restaurant from '../models/restaurantModel.js'
+import User from '../models/userModel.js'
 
 // @desc    Fetch all categories
 // @route   GET /api/category?restaurant
 //@access   Private
 const getCategories = asyncHandler(async (req, res) => {
   let filter = { user: req.query.user }
-  const categories = await Category.find(filter).sort({index:1})
+  const categories = await Category.find(filter).sort({ index: 1 })
   res.json(categories)
 })
 
@@ -22,7 +23,7 @@ const createCategory = asyncHandler(async (req, res) => {
     throw new Error('Invalid User')
   }
 
-  const { restaurant, name } = req.body
+  const { restaurant, name, user, index } = req.body
 
   const categoryExists = await Category.findOne({ name })
 
@@ -33,6 +34,8 @@ const createCategory = asyncHandler(async (req, res) => {
   const category = await Category.create({
     user,
     name,
+    index,
+    restaurant,
   })
 
   if (category) {
@@ -40,6 +43,7 @@ const createCategory = asyncHandler(async (req, res) => {
       _id: category._id,
       user: category.user,
       name: category.name,
+      index: category.index,
     })
   } else {
     res.status(400)

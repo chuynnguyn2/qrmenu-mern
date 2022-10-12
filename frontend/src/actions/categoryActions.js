@@ -28,10 +28,7 @@ export const listCategories = (userId) => async (dispatch, getState) => {
 
   try {
     dispatch({ type: CATEGORY_LIST_REQUEST })
-    const { data } = await axios.get(
-      `/api/category?user=${userId}`,
-      config
-    )
+    const { data } = await axios.get(`/api/category?user=${userId}`, config)
     dispatch({
       type: CATEGORY_LIST_SUCCESS,
       payload: data,
@@ -50,7 +47,7 @@ export const listCategories = (userId) => async (dispatch, getState) => {
 }
 
 export const createCategory =
-  (name, restaurant) => async (dispatch, getState) => {
+  (name, restaurant, index, user) => async (dispatch, getState) => {
     try {
       dispatch({
         type: CATEGORY_CREATE_REQUEST,
@@ -69,7 +66,7 @@ export const createCategory =
 
       const { data } = await axios.post(
         `api/category?restaurant=${restaurant}`,
-        { name, restaurant },
+        { name, restaurant, user, index },
         config
       )
       dispatch({
