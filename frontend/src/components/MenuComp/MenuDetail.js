@@ -19,8 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
   createCategory,
-  deleteCategory,
-  listCategories,
+  deleteCategory,  
   updateCategory,
 } from '../../actions/categoryActions'
 import { deleteProduct, listProducts, productCreate, updateProduct } from '../../actions/productActions'
@@ -381,7 +380,8 @@ const MenuDetail = (resId) => {
               dispatch(                
                 updateCategory(
                   {name: editCatName,
-                  _id: editCatId}
+                  _id: editCatId,
+                  restaurant: resId.resId}
                 )
               )              
               setEditCatModal(false)

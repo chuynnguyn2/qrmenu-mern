@@ -29,7 +29,7 @@ const MenuPage = () => {
     createCategory: createCate,
   } = createCat
   const editCats = useSelector((state)=>state.editCategory)
-  const {loading: loadingEditCat, success: successEditCat, editCategory} = editCats
+  const {loading: loadingEditCat, success: successEditCat, updateCategory} = editCats
   const deleteCats = useSelector((state)=>state.deleteCategory)
   const {loading: loadingDeleteCat, success: successDeleteCat, deleteCategory} = deleteCats
 
@@ -40,7 +40,7 @@ const MenuPage = () => {
     createPRODUCT: createProduct,
   } = createPro
   const editPro = useSelector((state)=>state.editProduct)
-  const {loading: loadingEditPro, success: successEditPro, editProduct} = editPro
+  const {loading: loadingEditPro, success: successEditPro, updateProduct} = editPro
   const deletePro = useSelector((state)=>state.deleteProduct)
   const {loading: loadingDeletePro, success: successDeletePro, catId} = deletePro
   
@@ -59,7 +59,7 @@ const MenuPage = () => {
       dispatch(listProducts(createProduct.category))
     }
     if(successEditPro ){
-      dispatch(listProducts(editProduct.category))
+      dispatch(listProducts(updateProduct.category))
     }
     if(successDeletePro){
       dispatch(listProducts(catId))
