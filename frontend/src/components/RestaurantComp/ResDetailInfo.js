@@ -168,7 +168,7 @@ const ResDetailInfo = ({ restaurant }) => {
       </div>
       <div className='d-flex justify-content-end my-2'>
         {editable ? (
-          <div>
+          <div> 
             <button
               onClick={() => {
                 setEditable(!editable)

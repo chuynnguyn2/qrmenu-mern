@@ -39,9 +39,7 @@ export const menuItems = [
   },
 ]
 
-const NaviSideBar = () => {
-  
-  const [inactive, setInactive] = useState(false)
+const NaviSideBar = () => {  
 
   const userLogin = useSelector((state)=>state.userLogin)
   const {userInfo} = userLogin

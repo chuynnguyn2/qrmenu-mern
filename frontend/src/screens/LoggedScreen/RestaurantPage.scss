@@ -15,6 +15,10 @@
                 width:100%;
             }
         }
+        .btn-add-res:disabled{
+            background-color: $color-primary-dark;
+            
+        }
     }
     .restaurant-detail{
         

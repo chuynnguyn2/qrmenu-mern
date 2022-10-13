@@ -40,7 +40,7 @@ const RestaurantPage = () => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
-  const userId = userInfo._id
+  const userId = userInfo._id  
 
   const createdRestaurant = useSelector((state) => state.createRestaurant)
   const {
@@ -55,7 +55,23 @@ const RestaurantPage = () => {
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
 
-  const [disable, setDisable] = useState(false)
+  let disable = false
+  if (userInfo.type === 'small') {
+    if (restaurants.length > 0) {
+      disable=true
+    }
+  }
+  if (userInfo.type === 'medium') {
+    if (restaurants.length > 2) {
+      disable = true
+    }
+  }
+  if (userInfo.type === 'large') {
+    if (restaurants.length > 4) {
+      disable=true
+    }
+  }
+  console.log(disable, userInfo.type)
 
   useEffect(() => {
     if (userInfo === null) {
@@ -68,23 +84,8 @@ const RestaurantPage = () => {
       dispatch(listRestaurants(userInfo._id))
       setShowModel(false)
     }
-
-    if (userInfo.type === 'small') {
-      if (restaurants.length > 0) {
-        setDisable(true)
-      }
-    }
-    if (userInfo.type === 'medium') {
-      if (restaurants.length > 2) {
-        setDisable(true)
-      }
-    }
-    if (userInfo.type === 'large') {
-      if (restaurants.length > 4) {
-        setDisable(true)
-      }
-    }
-  }, [dispatch, navigate, successCreate, successDelete, userInfo, selectRes])
+    
+  }, [dispatch, navigate, successCreate, successDelete, selectRes])
 
   return (
     <div className='restaurant mx-6rem'>
@@ -198,14 +199,15 @@ const RestaurantPage = () => {
                 </Row>
                 <Row>
                   <button
-                    className='light-btn py-2'
+                    className='light-btn py-2 btn-add-res'
                     onClick={() => {
                       setShowModel(true)
                     }}
-                    disabled={disable}
+                    disabled={disable}                    
                   >
                     Thêm Nhà Hàng
                   </button>
+                  {disable&&(<span className='u-margin-top-small'><strong>Lưu Ý: </strong> Số lượng nhà hàng của bạn đã vượt quá số lượng, vui lòng đăng ký gói dịch vụ cao cấp hơn để thêm nhà hàng</span>)}
                 </Row>
               </Col>
               <Col

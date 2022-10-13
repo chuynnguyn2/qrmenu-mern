@@ -27,6 +27,11 @@ const MenuPage = () => {
     success: successCreateCat,
     createCategory: createCate,
   } = createCat
+  const editCats = useSelector((state)=>state.editCategory)
+  const {loading: loadingEditCat, success: successEditCat, editCategory} = editCats
+  const deleteCats = useSelector((state)=>state.deleteCategory)
+  const {loading: loadingDeleteCat, success: successDeleteCat, deleteCategory} = deleteCats
+  
   
   useEffect(() => {
     if (userInfo === null) {
@@ -34,11 +39,11 @@ const MenuPage = () => {
     } else {
       dispatch(listRestaurants(userInfo._id))      
     }    
-    if (successCreateCat) {
+    if (successCreateCat|| successEditCat || successDeleteCat) {
       dispatch(listCategories(selectResId))            
       //setCategory(categories.filter((cat) => cat.restaurant === resId.resId))      
     }
-  }, [dispatch, navigate, selectResId, successCreateCat, userInfo])
+  }, [dispatch, navigate, selectResId, successCreateCat,successEditCat, successDeleteCat ,userInfo])
 
   return (
     <div className='menu-screen'>
@@ -52,7 +57,7 @@ const MenuPage = () => {
               setSelectResId(e.target.value)
               dispatch(listCategories(e.target.value))
             }}
-            style={{ display: 'inline-block', width: '10%' }}
+            style={{ display: 'inline-block', width: '15%' }}
           >          
           <option value={0}>Chọn Nhà Hàng</option>
             {restaurants.map((res, index) => (

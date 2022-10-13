@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
   createCategory,
+  deleteCategory,
   listCategories,
   updateCategory,
 } from '../../actions/categoryActions'
@@ -31,8 +32,13 @@ const MenuDetail = (resId) => {
   const cats = useSelector((state)=>state.categoryList)
   const {loading:loadingCat, error:errorCat, categories} = cats
 
+
   const [addCatModal, setAddCatModal] = useState(false)
   const [addCatName, setaddCatName] = useState()  
+
+  const [editCatModal, setEditCatModal] = useState(false)
+  const [editCatName, setEditCatName] = useState()
+  const [editCatId, setEditCatId] = useState()
 
   const [category, setCategory] = useState(categories)  
   
@@ -52,7 +58,8 @@ const MenuDetail = (resId) => {
   }
  
 
-  useEffect(() => {       
+  useEffect(() => {      
+
     setCategory(categories)    
     
   }, [dispatch, navigate, userInfo])
@@ -120,6 +127,9 @@ const MenuDetail = (resId) => {
                           >
                             {cat.name}
                           </button>
+                          <i className='fa-solid fa-pencil' onClick={()=>{setEditCatModal(true) 
+                          setEditCatId(cat._id)} }></i>
+                          <i className='fa-solid fa-trash-can' onClick={()=>{dispatch(deleteCategory(cat._id))}}></i>
                         </Stack>
                       )}
                     </Draggable>
@@ -168,32 +178,36 @@ const MenuDetail = (resId) => {
               {category.length > 0 && (
                 <>
                   <Row className='menu-detail-food-row'>
-                    <Col className=' col-1'>
+                    <Col className=' col-1' style={{paddingRight:"0"}}>
                       <img
                         src={pro.image}
                         alt={pro.name}
                         className='menu-detail-food-row-img img-fluid'
                       ></img>
                     </Col>
-                    <Col className='col-3'>
+                    <Col className='col-3' style={{paddingRight:"0"}}>
                       <span className='menu-detail-food-row-name'>
                         {pro.name}
                       </span>
                     </Col>
-                    <Col className=''>
+                    <Col className='' style={{paddingRight:"0"}}>
                       <span className='menu-detail-food-row-des'>
                         {pro.description}
                       </span>
                     </Col>
-                    <Col className='col-1'>
+                    <Col className='col-1' style={{paddingRight:"0", textAlign:"center"}}>
                       <span className='menu-detail-food-row-price'>
                         {pro.price}
                       </span>
                     </Col>
-                    <Col className='col-1'>
+                    <Col className='col-1' style={{padding:"0", textAlign:"center"}}>
                       <span className='menu-detail-food-row-featured'>
                         {pro.isFeatured ? <>HOT</> : null}
                       </span>
+                    </Col>
+                    <Col className='col-1'style={{fontSize:"large", overflow:'hidden', paddingRight:'0'}}>
+                    <i className='fa-solid fa-pencil me-2' onClick={()=>{}} style={{fontSize:"large", cursor:"pointer"}}></i>
+                    <i className='fa-solid fa-trash-can' onClick={()=>{}} style={{fontSize:"large", cursor:"pointer"}}></i>
                     </Col>
                   </Row>
                   <hr></hr>
@@ -253,6 +267,61 @@ const MenuDetail = (resId) => {
             variant='secondary'
             onClick={() => {
               setAddCatModal(false)
+            }}
+          >
+            Hủy
+          </Button>
+        </ModalFooter>
+      </Modal>
+            {/* EDIT MODAL */}
+
+            <Modal
+        show={editCatModal}
+        onHide={() => {
+          setEditCatModal(!editCatModal)
+        }}
+      >
+        <ModalHeader>
+          <ModalTitle>Chỉnh Sửa Danh Mục</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+          <Row className='u-margin-bottom-small'>
+            <Col xs={5} style={{ marginRight: '0' }}>
+              <p>Tên danh mục mới:</p>
+            </Col>
+            <Col>
+              <Form.Control
+                type='name'
+                onChange={(e) => {
+                  setEditCatName(e.target.value)
+                }}
+              ></Form.Control>
+            </Col>
+          </Row>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            type='submit'
+            style={{ backgroundColor: '#E80F88', border: 'none' }}
+            className='mx-3'
+            variant='primary'
+            onClick={() => {
+              dispatch(                
+                updateCategory(
+                  {name: editCatName,
+                  _id: editCatId}
+                )
+              )              
+              setEditCatModal(false)
+            }
+            }
+          >
+            Sửa
+          </Button>
+          <Button
+            variant='secondary'
+            onClick={() => {
+              setEditCatModal(false)
             }}
           >
             Hủy
