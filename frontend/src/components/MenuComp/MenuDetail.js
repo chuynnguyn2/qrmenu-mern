@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import {
@@ -11,6 +12,7 @@ import {
   ModalHeader,
   ModalTitle,
   Row,
+  Spinner,
   Stack,
 } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,7 +23,7 @@ import {
   listCategories,
   updateCategory,
 } from '../../actions/categoryActions'
-import { listProducts } from '../../actions/productActions'
+import { deleteProduct, listProducts, productCreate, updateProduct } from '../../actions/productActions'
 
 const MenuDetail = (resId) => {  
   const navigate = useNavigate()
@@ -36,15 +38,33 @@ const MenuDetail = (resId) => {
   const [addCatModal, setAddCatModal] = useState(false)
   const [addCatName, setaddCatName] = useState()  
 
+  const [selectCatId, setSelectCatId] = useState()
   const [editCatModal, setEditCatModal] = useState(false)
   const [editCatName, setEditCatName] = useState()
   const [editCatId, setEditCatId] = useState()
 
-  const [category, setCategory] = useState(categories)  
+   
+  const [addProName, setAddProName] = useState()
+  const [addProDes, setAddProDes] = useState()
+  const [addProPrice, setAddProPrice] = useState()
+  const [addProImage, setAddProImage] = useState('/upload/jgk.jpg')
+  const [addProFeatured, setAddProFeatured] = useState(false)
+
+  const [editPro, setEditPro] = useState()
+  const [editProModal, setEditProModal] = useState(false)
+  const [editProName, setEditProName] = useState()
+  const [editProDes, setEditProDes] = useState()
+  const [editProPrice, setEditProPrice] = useState()
+  const [editProImage, setEditProImage] = useState('/upload/jgk.jpg')
+  const [editProFeatured, setEditProFeatured] = useState(false)
+  console.log(editPro)
   
   const product = useSelector((state) => state.productList)
   const { loading, error, products } = product
 
+  const [addProModal, setAddProModal] = useState(false)
+
+  const [category, setCategory] = useState(categories) 
   const dragEnd = (result) => {
     const categoryItems = [...category]
     const [orderedCategory] = categoryItems.splice(result.source.index, 1)
@@ -57,7 +77,55 @@ const MenuDetail = (resId) => {
     items.map((item) => dispatch(updateCategory(item)))
   }
  
+  // UPLOADING IMAGE PRODUCT
+  const [uploading, setUploading] = useState(false)
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.append('image', file)
+    setUploading(true)
 
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+
+      const { data } = await axios.post('/api/upload', formData, config)
+
+      setAddProImage(data)
+      setUploading(false)
+    } catch (error) {
+      console.error(error)
+      setUploading(false)
+    }
+  }
+
+  // EDIT IMAGE PRODUCT
+  const [editUploading, setEditUploading] = useState(false)
+  const editFileHandler = async (e) => {
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.append('image', file)
+    setEditUploading(true)
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+
+      const { data } = await axios.post('/api/upload', formData, config)
+
+      setEditProImage(data)
+      setEditUploading(false)
+    } catch (error) {
+      console.error(error)
+      setEditUploading(false)
+    }
+  }
   useEffect(() => {      
 
     setCategory(categories)    
@@ -123,11 +191,12 @@ const MenuDetail = (resId) => {
                             className='menu-list-stack-text'
                             onClick={() => {
                               dispatch(listProducts(cat._id))
+                              setSelectCatId(cat._id)
                             }}
                           >
                             {cat.name}
                           </button>
-                          <i className='fa-solid fa-pencil' onClick={()=>{setEditCatModal(true) 
+                          <i className='fa-solid fa-pencil' onClick={()=>{
                           setEditCatId(cat._id)} }></i>
                           <i className='fa-solid fa-trash-can' onClick={()=>{dispatch(deleteCategory(cat._id))}}></i>
                         </Stack>
@@ -168,7 +237,7 @@ const MenuDetail = (resId) => {
               <span className='span-large'>
                 <strong>Danh sách Món Ăn</strong>
               </span>
-              <button className='light-btn ms-auto my-1'>
+              <button className='light-btn ms-auto my-1' disabled={!selectCatId} onClick={()=>{setAddProModal(true)}}>
                 <i className='fa-solid fa-plus'></i> Thêm Món Ăn
               </button>
             </Stack>
@@ -206,8 +275,11 @@ const MenuDetail = (resId) => {
                       </span>
                     </Col>
                     <Col className='col-1'style={{fontSize:"large", overflow:'hidden', paddingRight:'0'}}>
-                    <i className='fa-solid fa-pencil me-2' onClick={()=>{}} style={{fontSize:"large", cursor:"pointer"}}></i>
-                    <i className='fa-solid fa-trash-can' onClick={()=>{}} style={{fontSize:"large", cursor:"pointer"}}></i>
+                    <i className='fa-solid fa-pencil me-2' onClick={()=>{setEditPro(pro) 
+                    setEditProModal(true)
+
+                    }} style={{fontSize:"large", cursor:"pointer"}}></i>
+                    <i className='fa-solid fa-trash-can' onClick={()=>{dispatch(deleteProduct(pro._id, selectCatId))}} style={{fontSize:"large", cursor:"pointer"}}></i>
                     </Col>
                   </Row>
                   <hr></hr>
@@ -328,6 +400,186 @@ const MenuDetail = (resId) => {
           </Button>
         </ModalFooter>
       </Modal>
+
+      {/* CREATE PRODUCT MODAL */}
+      <Modal show={addProModal} onHide={() => setAddProModal(!addProModal)}>
+        <ModalHeader>
+          <ModalTitle>Thêm Món Ăn Mới</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+          <Form.Group controlId='password'>
+            <Form.Label>Tên Món Ăn:</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder='Nhập vào tên món ăn'
+              onChange={(e) => {
+                setAddProName(e.target.value)
+              }}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId='password'>
+            <Form.Label>Mô Tả:</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder='Nhập vào mô tả'
+              onChange={(e) => {
+                setAddProDes(e.target.value)
+              }}
+            ></Form.Control>
+            </Form.Group>
+
+          <Form.Group controlId='image' className='mb-3'>
+            <Form.Label>Hình Ảnh :</Form.Label>
+            <Form.Control type='file' onChange={uploadFileHandler} />
+            {uploading && <Spinner animation='border' />}
+          </Form.Group>
+          
+          <Form.Group controlId='password'>
+            <Form.Label>Giá tiền :</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder='Nhập vào giá tiền'
+              onChange={(e) => {
+                setAddProPrice(e.target.value)
+              }}
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group controlId='password'>
+            <Form.Label>Có phải món phổ biến không:</Form.Label>
+            <Form.Select
+              value={addProFeatured}              
+              onChange={(e) => {
+                setAddProFeatured(e.target.value)
+              }}
+            >
+              <option value={false}>Không</option>
+              <option value={true}>Có</option>
+            </Form.Select>
+          </Form.Group>
+        </ModalBody>
+        <ModalFooter>
+          <Col className='d-flex justify-content-center align-items-center'>
+            <Button style={{backgroundColor: "#E80F88", border:"none"}} className='mx-2'
+              onClick={() => {
+                dispatch(
+                  productCreate(                    
+                    addProName,
+                    selectCatId,
+                    resId.resId,
+                    userInfo._id,
+                    addProImage,
+                    addProDes,
+                    addProPrice,
+                    addProFeatured,               
+                    
+                  )
+                )
+                setAddProModal(false)
+              }}
+            >
+              Thêm
+            </Button>
+            <Button style={{backgroundColor: "#E80F88", border:"none"}} className='mx-2'
+              onClick={() => {
+                setAddProModal(false)
+              }}
+            >
+              Hủy
+            </Button>
+          </Col>
+        </ModalFooter>
+      </Modal>
+
+      {/* EDIT PRODUCT MODAL */}
+      {editPro && (<Modal show={editProModal} onHide={() => setEditProModal(!addProModal)}>
+        <ModalHeader>
+          <ModalTitle>Chỉnh Sửa Món Ăn</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+          <Form.Group controlId='password'>
+            <Form.Label>Tên Món Ăn:</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder={editPro.name}
+              onChange={(e) => {
+                setEditProName(e.target.value)
+              }}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId='password'>
+            <Form.Label>Mô Tả:</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder={editPro.des}
+              onChange={(e) => {
+                setEditProDes(e.target.value)
+              }}
+            ></Form.Control>
+            </Form.Group>
+
+          <Form.Group controlId='image' className='mb-3'>
+            <Form.Label>Hình Ảnh :</Form.Label>
+            <Form.Control type='file' onChange={editFileHandler} />
+            {editUploading && <Spinner animation='border' />}
+          </Form.Group>
+          
+          <Form.Group controlId='password'>
+            <Form.Label>Giá tiền :</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder={editPro.price}
+              onChange={(e) => {
+                setEditProPrice(e.target.value)
+              }}
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group controlId='password'>
+            <Form.Label>Có phải món phổ biến không:</Form.Label>
+            <Form.Select
+              value={editProFeatured}              
+              onChange={(e) => {
+                setEditProFeatured(e.target.value)
+              }}
+            >
+              <option value={false}>Không</option>
+              <option value={true}>Có</option>
+            </Form.Select>
+          </Form.Group>
+        </ModalBody>
+        <ModalFooter>
+          <Col className='d-flex justify-content-center align-items-center'>
+            <Button style={{backgroundColor: "#E80F88", border:"none"}} className='mx-2'
+              onClick={() => {
+                dispatch(
+                  updateProduct(                    
+                    {
+                      _id: editPro._id,
+                      name:editProName,                    
+                    image:editProImage,
+                    description:editProDes,
+                    price:editProPrice,
+                    isFeatured:editProFeatured,}           
+                    
+                  )
+                )
+                setEditProModal(false)
+              }}
+            >
+              Sửa
+            </Button>
+            <Button style={{backgroundColor: "#E80F88", border:"none"}} className='mx-2'
+              onClick={() => {
+                setEditProModal(false)
+              }}
+            >
+              Hủy
+            </Button>
+          </Col>
+        </ModalFooter>
+      </Modal>
+      )}
     </Container>
   )
 }

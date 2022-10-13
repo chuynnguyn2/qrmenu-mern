@@ -47,7 +47,7 @@ export const listProducts = (categoryId) => async (dispatch, getState) => {
 }
 
 export const productCreate =
-  (name, category, image, description, price, isFeatured) =>
+  (name, category, restaurant, user, image, description, price, isFeatured) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -67,7 +67,7 @@ export const productCreate =
 
       const { data } = await axios.post(
         `api/product?category=${category}`,
-        { name, category, image, description, price, isFeatured },
+        { name, category, restaurant, user, image, description, price, isFeatured },
         config
       )
       dispatch({
@@ -123,7 +123,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   }
 }
 
-export const deleteProduct = (id) => async (dispatch, getState) => {
+export const deleteProduct = (id, catId) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
@@ -139,10 +139,11 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       },
     }
 
-    await axios.delete(`/api/product/${id}`, config)
+    await axios.delete(`/api/product/${id}`, catId, config)
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
+      payload:catId,
     })
   } catch (error) {
     dispatch({

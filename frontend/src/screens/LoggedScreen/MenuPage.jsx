@@ -3,6 +3,7 @@ import { Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { listCategories } from '../../actions/categoryActions'
+import { listProducts } from '../../actions/productActions'
 import { listRestaurants } from '../../actions/restaurantActions'
 import MenuDetail from '../../components/MenuComp/MenuDetail'
 
@@ -31,6 +32,17 @@ const MenuPage = () => {
   const {loading: loadingEditCat, success: successEditCat, editCategory} = editCats
   const deleteCats = useSelector((state)=>state.deleteCategory)
   const {loading: loadingDeleteCat, success: successDeleteCat, deleteCategory} = deleteCats
+
+  const createPro = useSelector((state) => state.createProduct)
+  const {
+    loading: loadingCreatePro,
+    success: successCreatePro,
+    createPRODUCT: createProduct,
+  } = createPro
+  const editPro = useSelector((state)=>state.editProduct)
+  const {loading: loadingEditPro, success: successEditPro, editProduct} = editPro
+  const deletePro = useSelector((state)=>state.deleteProduct)
+  const {loading: loadingDeletePro, success: successDeletePro, catId} = deletePro
   
   
   useEffect(() => {
@@ -43,7 +55,17 @@ const MenuPage = () => {
       dispatch(listCategories(selectResId))            
       //setCategory(categories.filter((cat) => cat.restaurant === resId.resId))      
     }
-  }, [dispatch, navigate, selectResId, successCreateCat,successEditCat, successDeleteCat ,userInfo])
+    if (successCreatePro){
+      dispatch(listProducts(createProduct.category))
+    }
+    if(successEditPro ){
+      dispatch(listProducts(editProduct.category))
+    }
+    if(successDeletePro){
+      dispatch(listProducts(catId))
+    }
+
+  }, [dispatch, navigate, selectResId, successCreateCat, successEditCat, successDeleteCat, userInfo, successCreatePro, successEditPro, successDeletePro])
 
   return (
     <div className='menu-screen'>

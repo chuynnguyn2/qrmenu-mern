@@ -35,7 +35,7 @@ const createProduct = asyncHandler(async (req, res) => {
     throw new Error('Invalid Category')
   }
 
-  const { category, name, image, description, price, isFeatured } = req.body
+  const { category, name, image, description, price, isFeatured, restaurant, user } = req.body
 
   const productExists = await Product.findOne({ name })
 
@@ -50,6 +50,8 @@ const createProduct = asyncHandler(async (req, res) => {
     description,
     price,
     isFeatured,
+    restaurant,
+    user
   })
 
   if (product) {
@@ -61,6 +63,8 @@ const createProduct = asyncHandler(async (req, res) => {
       description: product.description,
       price: product.price,
       isFeatured: product.isFeatured,
+      restaurant: product.restaurant,
+      user: product.user
     })
   } else {
     res.status(400)
@@ -72,11 +76,12 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   DELETE /api/product/:productId
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
+  const catId = req.body
   const product = await Product.findById(req.params.productId)
 
   if (product) {
     await product.remove()
-    res.json({ message: 'Product removed' })
+    res.json({catId:catId})
   } else {
     res.status(404)
     throw new Error('Product not found')

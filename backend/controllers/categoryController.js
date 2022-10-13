@@ -44,6 +44,7 @@ const createCategory = asyncHandler(async (req, res) => {
       user: category.user,
       name: category.name,
       index: category.index,
+      restaurant: category.restaurant
     })
   } else {
     res.status(400)
