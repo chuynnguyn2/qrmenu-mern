@@ -22,7 +22,7 @@ const ProductToCus = ({ categoryId }) => {
   }
 
   return (
-    <div className='m-3' >      
+    <div className='p-4' >      
         <Row>        
           {products.map((product) => (            
             <Row key={product._id} className='mb-3 product-row' style={{margin:'0', backgroundColor:'white', borderRadius:'10px'}}>

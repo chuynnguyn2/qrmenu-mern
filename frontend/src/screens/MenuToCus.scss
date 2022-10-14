@@ -1,4 +1,11 @@
 .menu-to-cus{
+    .category-row{
+         position: sticky;
+            top: 0.3rem;
+            z-index: 5;
+            background-color: #2EB086;
+
+    }
         .category-btn{
             background-color: $color-primary-dark;
         }
@@ -16,5 +23,11 @@
                 background-color: $color-primary-light;
                 border:none;          
             }
+        }
+        .cart{
+            position: fixed;
+            bottom: 50%;
+            left: 0.3rem;
+            z-index: 5;
         }
 }

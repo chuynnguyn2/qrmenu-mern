@@ -18,6 +18,8 @@ const Cart = () => {
   const orderTable = useSelector((state) => state.order)
   const { loading, success, order } = orderTable
 
+  const [show, setShow] = useState(false)
+
   const [socket, setSocket] = useState(null)
 
   useEffect(() => {
@@ -40,19 +42,12 @@ const Cart = () => {
   }
 
   return (
-    <>
-      {[false].map((expand) => (
-        <Navbar key={expand} bg='light' expand={expand} className='mb-3'>
-          <Container fluid>
-            <Navbar.Brand href='#'>Giỏ hàng</Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement='end'
-            >
+    <div>    
+      <i className='fa-solid fa-cart cart' onClick={()=>{setShow(true)}} >abc</i>    
+    <Offcanvas show={show} onHide={()=>setShow(false)} placement='end' scroll='true' backdropClassName='true' style={{maxWidth:'70%'}}>
+      
               <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+                <Offcanvas.Title>
                   Danh sách các món đã chọn
                 </Offcanvas.Title>
               </Offcanvas.Header>
@@ -76,15 +71,13 @@ const Cart = () => {
                         <Col>{itemQty * item.price}</Col>
                       </Row>
                     ))}
-                    <Button onClick={placeOrderHandler}>Đặt hàng</Button>
+                    <button className='light-btn' onClick={placeOrderHandler}>Đặt hàng</button>
                   </>
                 )}
               </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
-      ))}
-    </>
+              </Offcanvas>
+            
+    </div>
   )
 }
 

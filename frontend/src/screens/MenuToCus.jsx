@@ -35,7 +35,7 @@ const MenuToCus = () => {
       ) : (
         <div className='menu-to-cus' style={{background: '#EEEEEE', minHeight:'100vh'}}>
           <Cart />
-          <div style={{overflow:'auto', whiteSpace:"nowrap"}} >
+          <div style={{overflow:'auto', whiteSpace:"nowrap"}}  className='category-row py-2'>
 
             <Button className={`light-btn mx-2 py-1 ${categoryId? '' :'category-btn'}`} onClick ={()=>{setCategoryId('')}} >Tất cả</Button>  
             {categories.map((category) => (
@@ -45,8 +45,7 @@ const MenuToCus = () => {
                   onClick={() => onCategoryButtonHandler(category._id)}
                 >
                   {category.name}
-                </Button>
-              
+                </Button>              
             ))}
           </div>
           <ProductToCus categoryId={categoryId} />
