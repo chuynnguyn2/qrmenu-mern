@@ -55,16 +55,8 @@ const Order = ({restaurantId}) => {
             </>
           ))}
         </>
-      ))}
-
-      <button onClick={(e) => setFullScreen(true)}>Go Fullscreen</button>
-
-      {/* <FullScreen
-        isFullScreen={isFullScreen}
-        onChange={() => {
-          setFullScreen(!isFullScreen)
-        }}
-      >
+      ))}     
+      
         {orders.map((item) => (
           <>
             <Col>{item.table}</Col>
@@ -77,7 +69,7 @@ const Order = ({restaurantId}) => {
             ))}
           </>
         ))}
-      </FullScreen> */}
+      
     </>
   )
 }

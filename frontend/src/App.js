@@ -7,6 +7,7 @@ import LoginPage from './screens/LoginPage'
 import RegisterPage from './screens/RegisterPage'
 
 import NaviSideBar from './screens/NaviSideBar'
+import MenuToCus from './screens/MenuToCus'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
+        <Route path='/menu/:restaurantId' element={<MenuToCus />}></Route> 
       </Routes>
     </BrowserRouter>
   )
