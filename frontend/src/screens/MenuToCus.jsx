@@ -33,14 +33,14 @@ const MenuToCus = () => {
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
-        <>
+        <div className='menu-to-cus' style={{background: '#EEEEEE', minHeight:'100vh'}}>
           <Cart />
           <div style={{overflow:'auto', whiteSpace:"nowrap"}} >
 
-            <Button className='light-btn mx-2 py-1' onClick ={()=>{setCategoryId('')}} >Tất cả</Button>  
+            <Button className={`light-btn mx-2 py-1 ${categoryId? '' :'category-btn'}`} onClick ={()=>{setCategoryId('')}} >Tất cả</Button>  
             {categories.map((category) => (
               
-                <Button className='light-btn mx-2 py-1'
+                <Button className={`light-btn mx-2 py-1 ${categoryId===category._id? 'category-btn' :''}`} 
                   type='button'
                   onClick={() => onCategoryButtonHandler(category._id)}
                 >
@@ -50,7 +50,7 @@ const MenuToCus = () => {
             ))}
           </div>
           <ProductToCus categoryId={categoryId} />
-        </>
+        </div>
       )}
     </>
   )

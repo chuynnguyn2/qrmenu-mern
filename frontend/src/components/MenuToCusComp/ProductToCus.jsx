@@ -22,23 +22,24 @@ const ProductToCus = ({ categoryId }) => {
   }
 
   return (
-    <>      
+    <div className='m-3' >      
         <Row>        
           {products.map((product) => (            
-            <Col key={product._id}>
-              <Product product={product} />
+            <Row key={product._id} className='mb-3 product-row' style={{margin:'0', backgroundColor:'white', borderRadius:'10px'}}>
+              <Product product={product}/>
               <Button
                 onClick={() => {
                   productChosenHandler(product._id)
-                }}
+                }}    
+                className='product-row-btn'            
               >
                 Chọn
               </Button>
-            </Col>
+            </Row>
           )
           )}          
         </Row>
-    </>
+    </div>
   )
 }
 

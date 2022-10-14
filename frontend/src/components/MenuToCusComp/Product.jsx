@@ -1,24 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Card } from 'react-bootstrap'
+import { Button, Card, Col, Row } from 'react-bootstrap'
 
 const Product = ({ product }) => {
+  console.log(product.image)
   return (
-    <Card className='my-3 p-3 rounded'>
-      <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant='top' />
-      </Link>
-      <Card.Body>
-        <Link to={`/product/${product._id}`}>
-          <Card.Title as='div'>
-            <strong>{product.name}</strong>
-          </Card.Title>
-        </Link>
-      </Card.Body>
-      <Card.Text as='div'>{product.isFeatured ? 'Hot' : null}</Card.Text>
+    <Row className='product-row-product'>
+      {product.image!=='/upload/jgk.jpg' &&(<Col className='col-4 me-3 d-flex justify-content-center items-align-center'>
+          <img className='img-fluid m-2' src={product.image} alt = {product.name} style={{borderRadius:'10px'}}></img>
+      </Col>)}
+      <Col className='col'>
+      
+        <Row>{product.name}</Row>  
+        <Row><strong style={{padding: "0", fontSize:'small'}}>{product.price} VND</strong></Row>
+        <Row>{product.isFeatured ? <span style={{color:'red',padding: "0", fontSize:'small'}}>Món nhiều người chọn</span> : null}</Row>      
+        <Button variant='link' style={{padding: "0", fontSize:'x-small'}}>Xem Chi Tiết &rarr;</Button>
+             
+      
+      </Col>
 
-      <Card.Text as='h3'>${product.price}</Card.Text>
-    </Card>
+    </Row>
   )
 }
 
