@@ -11,10 +11,10 @@ const Product = ({ product }) => {
       </Col>)}
       <Col className='col'>
       
-        <Row>{product.name}</Row>  
+        <Row style={{color:'black', fontWeight:'bold'}}>{product.name}</Row>  
         <Row><strong style={{padding: "0", fontSize:'small'}}>{product.price} VND</strong></Row>
         <Row>{product.isFeatured ? <span style={{color:'red',padding: "0", fontSize:'x-small'}}>Món nhiều người chọn</span> : null}</Row>      
-        <Button variant='link' style={{padding: "0", fontSize:'x-small', color:'#E80F88'}}>Xem Chi Tiết &rarr;</Button>
+        <Button variant='link' style={{padding: "0", fontSize:'x-small', color: '#70AF85'}}>Xem Chi Tiết &rarr;</Button>
              
       
       </Col>

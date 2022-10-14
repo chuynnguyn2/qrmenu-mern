@@ -11,8 +11,6 @@ const Cart = () => {
   const params = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [itemQty, setItemQty] = useState(1)
-
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
   const orderTable = useSelector((state) => state.order)
@@ -21,6 +19,12 @@ const Cart = () => {
   const [show, setShow] = useState(false)
 
   const [socket, setSocket] = useState(null)
+
+  const [totalPrice, setTotalPrice] = useState() 
+  
+  cartItems.map((item)=>{
+      setTotalPrice( totalPrice+item.qty)
+  })
 
   useEffect(() => {
     setSocket(io('http://localhost:8000'))
@@ -42,12 +46,17 @@ const Cart = () => {
   }
 
   return (
-    <div>    
-      <i className='fa-solid fa-cart cart' onClick={()=>{setShow(true)}} >abc</i>    
-    <Offcanvas show={show} onHide={()=>setShow(false)} placement='end' scroll='true' backdropClassName='true' style={{maxWidth:'70%'}}>
+    <div>   
+    <div className='d-flex justify-content-center items-align-center'>
+    <button className='to-cus-btn' style={{fontSize:'x-small'}} onClick={()=>{setShow(true)}}>
+    Xem đơn hàng của bạn
+      <i className='fa-solid fa-shopping-cart cart' ></i>    
+      </button>
+      </div> 
+    <Offcanvas show={show} onHide={()=>setShow(false)} placement='end' scroll='true' backdropClassName='true' style={{maxWidth:'75%'}}>
       
               <Offcanvas.Header closeButton>
-                <Offcanvas.Title>
+                <Offcanvas.Title style={{fontSize:'small', fontWeight:'bold'}}>
                   Danh sách các món đã chọn
                 </Offcanvas.Title>
               </Offcanvas.Header>
@@ -56,23 +65,40 @@ const Cart = () => {
                 {cartItems.length === 0 ? (
                   <p>Giỏ hàng của bạn trống</p>
                 ) : (
-                  <>
-                    {cartItems.map((item) => (
+                  <div>
+                  <Row style={{fontWeight:'bold'}} className='pb-2'>
+                    <Col className='col-7'>Tên Món Ăn</Col>
+                    <Col>Giá Tiền</Col>
+                  </Row>
+                    {cartItems.map((item) => (                      
                       <Row>
-                        <Col key={item.product}>{item.name}</Col>
-                        <input
-                          type='number'
-                          placeholder='1'
-                          min={1}
+                        <Col key={item.product} className="col-7" style={{fontSize:'small'}}>{item.name}</Col>                        
+                        
+                        <Col><strong>{item.qty * item.price} đ</strong></Col>
+                        
+                        <div className='py-1'>
+                        <span className='pe-3' style={{fontSize:'small', fontStyle:'italic'}}>Số Lượng:</span>
+                          <i className='fa-solid fa-minus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
+                          onClick={()=>{if(item.qty>1){dispatch(addToCart(item.product, item.qty-1))}}}                            
+                          ></i>
+                          <input type='name' className='mx-2'style={{maxWidth:'15%', textAlign:'center'}}
+                          value={item.qty}
                           onChange={(e) => {
-                            dispatch(addToCart(item.product, e.target.value))
-                          }}
-                        ></input>
-                        <Col>{itemQty * item.price}</Col>
+                            dispatch(addToCart(item.product, e.target.value.replace(/\D/,'')))
+                          }}></input>
+                          <i className='fa-solid fa-plus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
+                          onClick={()=>{dispatch(addToCart(item.product, item.qty+1))}}></i>
+                        </div>
+                        <hr></hr>
                       </Row>
                     ))}
-                    <button className='light-btn' onClick={placeOrderHandler}>Đặt hàng</button>
-                  </>
+                    <Row>
+                      Tổng Tiền: <strong>{totalPrice}</strong>
+                    </Row>
+                    <Row>
+                    <button className='to-cus-btn' onClick={placeOrderHandler}>Đặt hàng</button>
+                    </Row>
+                  </div>
                 )}
               </Offcanvas.Body>
               </Offcanvas>

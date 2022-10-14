@@ -1,14 +1,26 @@
 .menu-to-cus{
-    .category-row{
-         position: sticky;
+    &-header{
+        background-color: #CCF6C8;
+        position: sticky;
             top: 0.3rem;
             z-index: 5;
-            background-color: #2EB086;
+        
+        .cart{
+            color:white;
+            font-size: large;
+            background-color:#FF6D28;
+            padding:.5rem;
+            border-radius: 50%;
+        }
+        
+        .category-btn{
+            background-color: #FF6D28;
+        }
+        .category-row{
+            border-bottom: #70AF85 solid 1px ;
+        }
 
     }
-        .category-btn{
-            background-color: $color-primary-dark;
-        }
         .product-row{
             position: relative;
             &-product{
@@ -24,10 +36,5 @@
                 border:none;          
             }
         }
-        .cart{
-            position: fixed;
-            bottom: 50%;
-            left: 0.3rem;
-            z-index: 5;
-        }
+       
 }

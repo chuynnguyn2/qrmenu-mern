@@ -31,7 +31,8 @@ const ProductToCus = ({ categoryId }) => {
                 onClick={() => {
                   productChosenHandler(product._id)
                 }}    
-                className='product-row-btn'            
+                className='product-row-btn '      
+                style={{backgroundColor: '#FF6D28'}}      
               >
                 Chọn
               </Button>

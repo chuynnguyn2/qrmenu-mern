@@ -144,4 +144,20 @@
     color: $color-white;
   }
 }
+.to-cus-btn{
+  border: none;
+  color: $color-white;
+  background-color: #FF6D28;
+  padding: 0 .5rem;
+  font-size: 1rem;
+  border-radius: 10px;  
+}
+.to-cus-white-btn{
+  border: none;
+  color: $color-black;
+  background-color: $color-white;
+  padding: 0 .5rem;
+  font-size: 1rem;
+  border-radius: 10px;  
+}
 

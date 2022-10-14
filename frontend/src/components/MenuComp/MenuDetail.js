@@ -407,7 +407,7 @@ const MenuDetail = (resId) => {
           <ModalTitle>Thêm Món Ăn Mới</ModalTitle>
         </ModalHeader>
         <ModalBody>
-          <Form.Group controlId='password'>
+          <Form.Group controlId='password' className='mb-3'>
             <Form.Label>Tên Món Ăn:</Form.Label>
             <Form.Control
               type='name'
@@ -418,7 +418,7 @@ const MenuDetail = (resId) => {
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group controlId='password'>
+          <Form.Group controlId='password'className='mb-3'>
             <Form.Label>Mô Tả:</Form.Label>
             <Form.Control
               type='name'
@@ -435,17 +435,20 @@ const MenuDetail = (resId) => {
             {uploading && <Spinner animation='border' />}
           </Form.Group>
           
-          <Form.Group controlId='password'>
+          <Form.Group controlId='password' className='mb-3'>
             <Form.Label>Giá tiền :</Form.Label>
             <Form.Control
               type='name'
               placeholder='Nhập vào giá tiền'
               onChange={(e) => {
-                setAddProPrice(e.target.value)
-              }}
+                setAddProPrice(e.target.value.replace(/\D/,''))
+              }} 
+              style={{maxWidth:'90%', display:'inline-block'}}                           
             ></Form.Control>
+            <span className='px-3'>đ</span>
+            
           </Form.Group>
-          <Form.Group controlId='password'>
+          <Form.Group controlId='password' className='mb-3'>
             <Form.Label>Có phải món phổ biến không:</Form.Label>
             <Form.Select
               value={addProFeatured}              
