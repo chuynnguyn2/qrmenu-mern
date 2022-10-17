@@ -1,4 +1,8 @@
 import { Server } from 'socket.io'
+import colors from 'colors'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const io = new Server({
   cors: {
@@ -7,11 +11,13 @@ const io = new Server({
 })
 
 let onlineRestaurants = []
+console.log(onlineRestaurants)
 
 const addNewRestaurant = (restaurantId, socketId) => {
   !onlineRestaurants.some(
     (restaurant) => restaurant.restaurantId === restaurantId
-  ) && onlineRestaurants.push({ restaurantId, socketId })
+  ) && onlineRestaurants.push({ restaurantId:restaurantId, socketId:socketId })
+  console.log(onlineRestaurants)
 }
 
 const removeRestaurant = (socketId) => {
@@ -20,9 +26,12 @@ const removeRestaurant = (socketId) => {
   )
 }
 
-const getRestaurant = (restaurantId) => {
+const getRestaurant = (resId) => {
+  console.log(onlineRestaurants.find(
+    ({ restaurantId }) => restaurantId === resId    
+  ), onlineRestaurants)
   return onlineRestaurants.find(
-    (restaurant) => restaurant.restaurantId === restaurantId
+    (restaurant) => restaurant.restaurantId === resId
   )
 }
 
@@ -31,17 +40,22 @@ io.on('connection', (socket) => {
     addNewRestaurant(restaurantId, socket.id)
   })
 
-  socket.on('sendOrder', ({ receiverName, order }) => {
+socket.on('sendOrder', ({ receiverName, order }) => {
     const receiver = getRestaurant(receiverName)
+    console.log(order)    
     io.to(receiver.socketId).emit('getOrder', {
       order,
       //   table,
     })
-  })
+})
 
-  socket.on('disconnect', () => {
+socket.on('disconnect', () => {
     removeRestaurant(socket.id)
   })
 })
 
-io.listen(8000)
+io.listen(
+  8000, 
+  console.log(
+    `Socket IO running in ${process.env.NODE_ENV} on port 8000`.magenta.bold
+  )) 

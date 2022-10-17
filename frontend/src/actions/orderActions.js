@@ -33,7 +33,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
-      payload: data,
+      payload: data, 
     })
     dispatch({
       type: CART_CLEAR_ITEMS,

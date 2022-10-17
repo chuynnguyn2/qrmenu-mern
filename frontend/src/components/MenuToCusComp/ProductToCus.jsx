@@ -14,7 +14,16 @@ const ProductToCus = ({ categoryId }) => {
   const productList = useSelector((state) => state.productList)
   const { loading, error, products } = productList  
   const {totalPrice, setTotalPrice} = useContext(totalPriceContext)
-  
+
+  const carts = useSelector((state)=>state.cart)
+  const {cartItems} = carts
+
+  let cartProId = []
+  if(cartItems){
+    cartItems.map((i)=>{
+      cartProId.push(i.product)
+    })
+  }  
 
   useEffect(() => {
     dispatch(listProducts(categoryId))
@@ -26,15 +35,16 @@ const ProductToCus = ({ categoryId }) => {
           {products.map((product) => (            
             <Row key={product._id} className='mb-3 product-row' style={{margin:'0', backgroundColor:'white', borderRadius:'10px'}}>
               <Product product={product}/>
-              <Button
+              <Button       
+              disabled={cartProId.includes(product._id)}      
                 onClick={() => {
                   dispatch(addToCart(product._id, 1))
-                  setTotalPrice(totalPrice+product.price)
+                  setTotalPrice((totalPrice+product.price))
                 }}    
                 className='product-row-btn '      
                 style={{backgroundColor: '#FF6D28'}}      
               >
-                Chọn
+                {cartProId.includes(product._id)? ('Đã Chọn') : ('Chọn')}
               </Button>
             </Row>
           )

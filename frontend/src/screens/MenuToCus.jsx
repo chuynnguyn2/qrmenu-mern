@@ -21,9 +21,10 @@ const MenuToCus = () => {
   let initialPrice = 0
   if(cartItems){
     cartItems.map((item=>{
-      initialPrice = initialPrice+(item.price*item.qty)
+      initialPrice = (initialPrice+(item.price*item.qty))
     }))
   }
+  
 
   const [totalPrice, setTotalPrice] = useState(initialPrice)
   const value = {totalPrice, setTotalPrice}

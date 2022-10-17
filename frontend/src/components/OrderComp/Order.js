@@ -16,35 +16,35 @@ const Order = ({restaurantId}) => {
   const { orders } = orderList
 
   const [socket, setSocket] = useState(null)
+ 
+  // useEffect(() => {
+  //   setSocket(io('http://localhost:8000'))
+  // }, [])
 
-  useEffect(() => {
-    setSocket(io('http://localhost:8000'))
-  }, [])
+  // useEffect(() => {
+  //   socket?.emit('newRestaurant', restaurantId)
+  // }, [socket, restaurantId])
 
-  useEffect(() => {
-    socket?.emit('newRestaurant', restaurantId)
-  }, [socket, restaurantId])
+  // const [notifications, setNotifications] = useState([])
+  // console.log(notifications)
 
-  const [notifications, setNotifications] = useState([])
-
-  useEffect(() => {
-    socket?.on('getOrder', (order) => {
-      setNotifications((prev) => [...prev, order])
-    })
-  }, [socket])
+  // useEffect(() => {
+  //   socket?.on('getOrder', (order) => {
+  //     setNotifications((prev) => [...prev, order])
+  //   })
+  // }, [socket])
 
   useEffect(() => {
     if (!userInfo) {
       navigate('/login')
     }
     dispatch(listOrders(restaurantId))
-  }, [navigate, userInfo, restaurantId])
+  }, [navigate, userInfo, restaurantId, dispatch])
 
-  const [isFullScreen, setFullScreen] = useState(false)
-
+  
   return (
     <>
-      {notifications.map((n) => (
+      {/* {notifications.map((n1) => (n1.map((n)=>(
         <>
           <Col>{n.order.table}</Col>
           {n.order.orderItems.map((i) => (
@@ -55,7 +55,8 @@ const Order = ({restaurantId}) => {
             </>
           ))}
         </>
-      ))}     
+        ))))}      */}
+      <hr></hr>
       
         {orders.map((item) => (
           <>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Button, Col, Container, Navbar, Offcanvas, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { addToCart } from '../../actions/cartActions'
+import { addToCart, removeFromCart } from '../../actions/cartActions'
 import { createOrder } from '../../actions/orderActions'
 import { io } from 'socket.io-client'
 import { totalPriceContext } from '../../screens/MenuToCus'
@@ -15,14 +15,15 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
   const orderTable = useSelector((state) => state.order)
-  const { loading, success, order } = orderTable
+  const { loading, success, orderOrdered } = orderTable
+  console.log(orderOrdered)
 
   const [show, setShow] = useState(false)
 
   const [socket, setSocket] = useState(null)
 
   const {totalPrice, setTotalPrice} = useContext(totalPriceContext) 
-  
+   
   
   useEffect(() => {
     setSocket(io('http://localhost:8000'))
@@ -36,11 +37,12 @@ const Cart = () => {
         table: searchParams.get('table'),
       })
     )
-    socket.emit('sendOrder', {
-      receiverName: params.restaurantId,
-      order: order,
-      // table: searchParams.get('table'),
-    })
+    // console.log(orderOrdered)
+    // socket.emit('sendOrder', {
+    //   receiverName: params.restaurantId,
+    //   order: orderOrdered,
+    //   // table: searchParams.get('table'),
+    // })
   }
 
   return (
@@ -78,7 +80,7 @@ const Cart = () => {
                         <span className='pe-3' style={{fontSize:'small', fontStyle:'italic'}}>Số Lượng:</span>
                           <i className='fa-solid fa-minus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
                           onClick={()=>{if(item.qty>1){dispatch(addToCart(item.product, item.qty-1))
-                          setTotalPrice(totalPrice-item.price)
+                          setTotalPrice((totalPrice-item.price))
                           }}}                            
                           ></i>
                           <input type='name' className='mx-2'style={{maxWidth:'15%', textAlign:'center'}}
@@ -90,9 +92,16 @@ const Cart = () => {
                           disabled></input>
                           <i className='fa-solid fa-plus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
                           onClick={()=>{dispatch(addToCart(item.product, item.qty+1))
-                            setTotalPrice(totalPrice+item.price)
+                            setTotalPrice((totalPrice+item.price))
+                          }}></i>
+                          <i className='fa-solid fa-trash-can  ms-3' style={{color:'#FF6D28'}} 
+                          onClick={()=>{ 
+                            setTotalPrice((totalPrice-(item.price*item.qty)))
+                            dispatch(removeFromCart(item.product))                        
+
                           }}></i>
                         </div>
+
                         <hr></hr>
                       </Row>
                     ))}
