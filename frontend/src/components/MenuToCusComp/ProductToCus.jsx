@@ -1,25 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Row, Col, Button } from 'react-bootstrap'
 import { listProducts } from '../../actions/productActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addToCart } from '../../actions/cartActions'
 import Product from './Product'
+import { totalPriceContext } from '../../screens/MenuToCus'
 
 const ProductToCus = ({ categoryId }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const productList = useSelector((state) => state.productList)
-  const { loading, error, products } = productList
+  const { loading, error, products } = productList  
+  const {totalPrice, setTotalPrice} = useContext(totalPriceContext)
+  
 
   useEffect(() => {
     dispatch(listProducts(categoryId))
-  }, [categoryId, dispatch, navigate])
-
-  const productChosenHandler = (productid) => {
-    dispatch(addToCart(productid, 1))
-  }
+  }, [categoryId, dispatch, navigate])  
 
   return (
     <div className='p-4' >      
@@ -29,7 +28,8 @@ const ProductToCus = ({ categoryId }) => {
               <Product product={product}/>
               <Button
                 onClick={() => {
-                  productChosenHandler(product._id)
+                  dispatch(addToCart(product._id, 1))
+                  setTotalPrice(totalPrice+product.price)
                 }}    
                 className='product-row-btn '      
                 style={{backgroundColor: '#FF6D28'}}      

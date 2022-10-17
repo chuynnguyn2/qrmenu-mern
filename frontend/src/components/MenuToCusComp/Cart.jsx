@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Button, Col, Container, Navbar, Offcanvas, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { addToCart } from '../../actions/cartActions'
 import { createOrder } from '../../actions/orderActions'
 import { io } from 'socket.io-client'
+import { totalPriceContext } from '../../screens/MenuToCus'
 
 const Cart = () => {
   const dispatch = useDispatch()
@@ -20,12 +21,9 @@ const Cart = () => {
 
   const [socket, setSocket] = useState(null)
 
-  const [totalPrice, setTotalPrice] = useState() 
+  const {totalPrice, setTotalPrice} = useContext(totalPriceContext) 
   
-  cartItems.map((item)=>{
-      setTotalPrice( totalPrice+item.qty)
-  })
-
+  
   useEffect(() => {
     setSocket(io('http://localhost:8000'))
   }, [])
@@ -79,22 +77,28 @@ const Cart = () => {
                         <div className='py-1'>
                         <span className='pe-3' style={{fontSize:'small', fontStyle:'italic'}}>Số Lượng:</span>
                           <i className='fa-solid fa-minus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
-                          onClick={()=>{if(item.qty>1){dispatch(addToCart(item.product, item.qty-1))}}}                            
+                          onClick={()=>{if(item.qty>1){dispatch(addToCart(item.product, item.qty-1))
+                          setTotalPrice(totalPrice-item.price)
+                          }}}                            
                           ></i>
                           <input type='name' className='mx-2'style={{maxWidth:'15%', textAlign:'center'}}
                           value={item.qty}
-                          onChange={(e) => {
-                            dispatch(addToCart(item.product, e.target.value.replace(/\D/,'')))
-                          }}></input>
+                          // onChange={(e) => {
+                          //   dispatch(addToCart(item.product, e.target.value.replace(/\D/,'')))
+                          //   setTotalPrice(totalPrice+(item.price*e.target.value.replace(/\D/,'')))
+                          // }}
+                          disabled></input>
                           <i className='fa-solid fa-plus' style={{color:'white', backgroundColor:'#FF6D28', padding:'.3rem', borderRadius:'50%'}}
-                          onClick={()=>{dispatch(addToCart(item.product, item.qty+1))}}></i>
+                          onClick={()=>{dispatch(addToCart(item.product, item.qty+1))
+                            setTotalPrice(totalPrice+item.price)
+                          }}></i>
                         </div>
                         <hr></hr>
                       </Row>
                     ))}
-                    <Row>
-                      Tổng Tiền: <strong>{totalPrice}</strong>
-                    </Row>
+                    <span className='u-margin-bottom-medium'>
+                      Tổng Tiền: <strong>{totalPrice} đ</strong>
+                    </span>
                     <Row>
                     <button className='to-cus-btn' onClick={placeOrderHandler}>Đặt hàng</button>
                     </Row>

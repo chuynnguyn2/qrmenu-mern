@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Button, Card, Col, Row } from 'react-bootstrap'
 
 const Product = ({ product }) => {
-  console.log(product.image)
   return (
     <Row className='product-row-product'>
       {product.image!=='/upload/jgk.jpg' &&(<Col className='col-4 me-2 d-flex justify-content-center items-align-center' style={{padding: "0"}}>
