@@ -26,10 +26,7 @@ const removeRestaurant = (socketId) => {
   )
 }
 
-const getRestaurant = (resId) => {
-  console.log(onlineRestaurants.find(
-    ({ restaurantId }) => restaurantId === resId    
-  ), onlineRestaurants)
+const getRestaurant = (resId) => {  
   return onlineRestaurants.find(
     (restaurant) => restaurant.restaurantId === resId
   )
@@ -40,13 +37,13 @@ io.on('connection', (socket) => {
     addNewRestaurant(restaurantId, socket.id)
   })
 
-socket.on('sendOrder', ({ receiverName, order }) => {
-    const receiver = getRestaurant(receiverName)
-    console.log(order)    
+socket.on('sendOrder', ({ receiverName }) => {
+  if (receiverName){
+    const receiver = getRestaurant(receiverName)           
     io.to(receiver.socketId).emit('getOrder', {
-      order,
-      //   table,
+      msg:"dispatch order",
     })
+  }
 })
 
 socket.on('disconnect', () => {

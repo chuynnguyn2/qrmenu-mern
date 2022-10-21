@@ -53,7 +53,7 @@ const NaviSideBar = () => {
 
           <div className='main-menu pt-5'>
             <div className='main-menu-list'>
-              {menuItems.map((menuItem, index) => (
+              {menuItems.map((menuItem, index) => ( 
                 
                     <NavLink exact={menuItem.exact}
                     to={menuItem.to}

@@ -37,12 +37,10 @@ const Cart = () => {
         table: searchParams.get('table'),
       })
     )
-    // console.log(orderOrdered)
-    // socket.emit('sendOrder', {
-    //   receiverName: params.restaurantId,
-    //   order: orderOrdered,
-    //   // table: searchParams.get('table'),
-    // })
+    console.log(orderOrdered)
+    socket.emit('sendOrder', {
+      receiverName: params.restaurantId      
+    })
   }
 
   return (

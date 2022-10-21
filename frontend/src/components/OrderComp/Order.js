@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { listOrders } from '../../actions/orderActions'
-import { Col } from 'react-bootstrap'
+import { Card, Col, ListGroup } from 'react-bootstrap'
 
 import { io } from 'socket.io-client'
 
@@ -17,22 +17,23 @@ const Order = ({restaurantId}) => {
 
   const [socket, setSocket] = useState(null)
  
-  // useEffect(() => {
-  //   setSocket(io('http://localhost:8000'))
-  // }, [])
+  useEffect(() => {
+    setSocket(io('http://localhost:8000'))
+  }, [])
+ 
+  useEffect(() => {
+    socket?.emit('newRestaurant', restaurantId)
+  }, [socket, restaurantId])
 
-  // useEffect(() => {
-  //   socket?.emit('newRestaurant', restaurantId)
-  // }, [socket, restaurantId])
+  const [notifications, setNotifications] = useState([])
+  console.log(notifications)
 
-  // const [notifications, setNotifications] = useState([])
-  // console.log(notifications)
-
-  // useEffect(() => {
-  //   socket?.on('getOrder', (order) => {
-  //     setNotifications((prev) => [...prev, order])
-  //   })
-  // }, [socket])
+  useEffect(() => {
+    socket?.on('getOrder', (msg) => {
+      setNotifications((prev) => [...prev, msg])
+      dispatch(listOrders(restaurantId))
+    })
+  }, [dispatch, restaurantId, socket])
 
   useEffect(() => {
     if (!userInfo) {
@@ -59,16 +60,18 @@ const Order = ({restaurantId}) => {
       <hr></hr>
       
         {orders.map((item) => (
-          <>
-            <Col>{item.table}</Col>
+          <Card>
+            <Card.Header>Bàn số {item.table}</Card.Header>
+            <ListGroup>
             {item.orderItems.map((i) => (
-              <>
-                <Col>{i.product}</Col>
-                <Col>{i.qty}</Col>
-                <Col>{i.price}</Col>
-              </>
+              <ListGroup.Item>
+                <span>{i.name}</span>
+                <span>{i.qty}</span>
+                <span>{i.price}</span>
+              </ListGroup.Item>
             ))}
-          </>
+            </ListGroup>
+          </Card>
         ))}
       
     </>
