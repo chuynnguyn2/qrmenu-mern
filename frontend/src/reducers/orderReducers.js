@@ -45,7 +45,7 @@ import {
   //     case ORDER_DETAILS_SUCCESS:
   //       return {
   //         loading: false,
-  //         order: action.payload,
+  //         orderDetail: action.payload,
   //       }
   //     case ORDER_DETAILS_FAIL:
   //       return {

@@ -11,13 +11,11 @@ const io = new Server({
 })
 
 let onlineRestaurants = []
-console.log(onlineRestaurants)
 
 const addNewRestaurant = (restaurantId, socketId) => {
   !onlineRestaurants.some(
     (restaurant) => restaurant.restaurantId === restaurantId
   ) && onlineRestaurants.push({ restaurantId:restaurantId, socketId:socketId })
-  console.log(onlineRestaurants)
 }
 
 const removeRestaurant = (socketId) => {
@@ -37,9 +35,9 @@ io.on('connection', (socket) => {
     addNewRestaurant(restaurantId, socket.id)
   })
 
-socket.on('sendOrder', ({ receiverName }) => {
-  if (receiverName){
-    const receiver = getRestaurant(receiverName)           
+socket.on('sendOrder', ({ receiverName }) => {  
+    const receiver = getRestaurant(receiverName)   
+    if (onlineRestaurants.includes(receiver)){        
     io.to(receiver.socketId).emit('getOrder', {
       msg:"dispatch order",
     })

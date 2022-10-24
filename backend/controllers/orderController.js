@@ -40,21 +40,21 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get order by ID
-// @route   GET /api/order/:id
-// @access  Private
-const getOrderById = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate(
-    'restaurant'
-  )
+// @desc    Get order by res and table
+// @route   GET /api/order
+// @access  Public
+// const getOrderById = asyncHandler(async (req, res) => {
+//   const rest = req.restaurant
+//   const tabl = req.table
+//   const order = await Order.find({restaurant:rest, table:tabl})
 
-  if (order) {
-    res.json(order)
-  } else {
-    res.status(404)
-    throw new Error('Order not found')
-  }
-})
+//   if (order) {
+//     res.json(order)
+//   } else {
+//     res.status(404)
+//     throw new Error('Order not found')
+//   }
+// })
 
 // @desc    Update order to paid
 // @route   GET /api/orders/:id/pay
@@ -120,7 +120,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 
 export {
   addOrderItems,
-  getOrderById,
+  //getOrderById,
   updateOrderToPaid,
   updateOrderToDelivered,
   getMyOrders,
