@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { listOrders } from '../../actions/orderActions'
-import { Card, Col, ListGroup } from 'react-bootstrap'
+import { listOrders, updateOrder } from '../../actions/orderActions'
+import { Card, Col, ListGroup, Row, Table } from 'react-bootstrap'
 
 import { io } from 'socket.io-client'
 
@@ -14,6 +14,9 @@ const Order = ({restaurantId}) => {
 
   const orderList = useSelector((state) => state.orderList)
   const { orders } = orderList
+
+  const ordUpdate = useSelector((state)=>state.orderUpdate)
+  const {loading:updateLoading, success: updateSuccess, error: updateError, orderUpdate} = ordUpdate
 
   const [socket, setSocket] = useState(null)
  
@@ -29,8 +32,8 @@ const Order = ({restaurantId}) => {
   console.log(notifications)
 
   useEffect(() => {
-    socket?.on('getOrder', (msg) => {
-      setNotifications((prev) => [...prev, msg])
+    socket?.on('getOrder', (order) => {
+      setNotifications((prev) => [...prev, order])
       dispatch(listOrders(restaurantId))
     })
   }, [dispatch, restaurantId, socket])
@@ -40,41 +43,49 @@ const Order = ({restaurantId}) => {
       navigate('/login')
     }
     dispatch(listOrders(restaurantId))
-  }, [navigate, userInfo, restaurantId, dispatch])
+    if (updateSuccess){
+      dispatch(listOrders(restaurantId))
+    }
+  }, [navigate, userInfo, restaurantId, dispatch, updateSuccess])
 
   
   return (
-    <>
-      {/* {notifications.map((n1) => (n1.map((n)=>(
-        <>
-          <Col>{n.order.table}</Col>
-          {n.order.orderItems.map((i) => (
-            <>
-              <Col>{i.product}</Col>
-              <Col>{i.qty}</Col>
-              <Col>{i.price}</Col>
-            </>
-          ))}
-        </>
-        ))))}      */}
-      <hr></hr>
-      
+    <div>      
+      <Row>      
         {orders.map((item) => (
-          <Card>
-            <Card.Header>Bàn số {item.table}</Card.Header>
-            <ListGroup>
-            {item.orderItems.map((i) => (
-              <ListGroup.Item>
-                <span>{i.name}</span>
-                <span>{i.qty}</span>
-                <span>{i.price}</span>
-              </ListGroup.Item>
-            ))}
-            </ListGroup>
+          <Card style={{width: "18rem", backgroundColor:item.confirm? "white" :"#ffcccc"}} className='m-3 p-2'>
+            <Card.Header style={{color:'black', fontWeight:'bold', fontSize:'large', textAlign:'center'}}>Bàn số {item.table}</Card.Header>
+            <Table responsive>
+              <thead style={{fontSize:'x-small'}}>
+                <tr>
+                  <th>Tên Món Ăn</th>
+                  <th>SL</th>
+                  <th>Đơn Giá</th>
+                </tr>
+              </thead>
+              <tbody >
+                {item.orderItems.map((i)=>(
+                  <tr>
+                    <th style={{fontWeight:'normal', fontSize:'small'}}>{i.name}</th>
+                    <th style={{fontWeight:'normal', fontSize:'small'}}>{i.qty}</th>
+                    <th style={{fontWeight:'normal', fontSize:'small'}}>{i.price}</th>
+                  </tr>
+                ))}
+                <tr>
+                  <th>Tổng tiền: {item.totalPrice}</th>
+                </tr>
+              </tbody>
+            </Table>
+            {!item.confirm && (<Card.Footer>
+              <button onClick={()=>{dispatch(updateOrder ({_id:item._id, confirm:true}))}}>Xac Nhan</button>
+            </Card.Footer>)}
+            
+            
           </Card>
         ))}
+        </Row>
       
-    </>
+    </div>
   )
 }
 

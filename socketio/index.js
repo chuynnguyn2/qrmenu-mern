@@ -35,11 +35,11 @@ io.on('connection', (socket) => {
     addNewRestaurant(restaurantId, socket.id)
   })
 
-socket.on('sendOrder', ({ receiverName }) => {  
+socket.on('sendOrder', ({ receiverName, order }) => {  
     const receiver = getRestaurant(receiverName)   
     if (onlineRestaurants.includes(receiver)){        
     io.to(receiver.socketId).emit('getOrder', {
-      msg:"dispatch order",
+      order: order
     })
   }
 })

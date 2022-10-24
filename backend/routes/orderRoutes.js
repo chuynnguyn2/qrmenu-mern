@@ -2,8 +2,7 @@ import express from 'express'
 
 import {
   addOrderItems,  
-  updateOrderToPaid,
-  updateOrderToDelivered,
+  updateOrder,
   getMyOrders,
   //   getOrders,
 } from '../controllers/orderController.js'
@@ -13,7 +12,7 @@ const orderRouter = express.Router()
 
 orderRouter.route('/').post(addOrderItems).get(protect, getMyOrders)
 //orderRouter.route('/byId').get(getOrderById)
-orderRouter.route('/:id/pay').put(protect, updateOrderToPaid)
-orderRouter.route('/:id/deliver').put(protect, updateOrderToDelivered)
+orderRouter.route('/:id').put(protect, updateOrder)
+
 
 export default orderRouter

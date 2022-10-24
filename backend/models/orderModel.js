@@ -24,6 +24,10 @@ const orderSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
     // shippingAdress: {
     //   address: { type: String, required: true },
     //   city: { type: String, required: true },
@@ -45,11 +49,11 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: 0.0,
     },
-    // totalPrice: {
-    //   type: Number,
-    //   required: true,
-    //   default: 0.0,
-    // },   
+    confirm:{
+      type: Boolean,
+      require:true,
+      default:false,
+    }, 
     isDelivered: {
       type: Boolean,
       required: true,

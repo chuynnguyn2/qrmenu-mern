@@ -39,8 +39,12 @@ const Cart = () => {
     setSocket(io('http://localhost:8000'))
     if (success){
       setOrderItems(JSON.parse(localStorage.getItem('orderItems')))
+      socket.emit('sendOrder', {
+        receiverName: params.restaurantId,
+        order: orderOrdered      
+      })
     }
-  }, [dispatch, orderOrdered, success])
+  }, [dispatch, params.restaurantId, success])
 
   const placeOrderHandler = () => {
     dispatch(
@@ -48,12 +52,9 @@ const Cart = () => {
         orderItems: cartItems,
         restaurant: params.restaurantId,
         table: searchParams.get('table'),
+        totalPrice: totalPrice,
       })
-    )
-    
-    socket.emit('sendOrder', {
-      receiverName: params.restaurantId      
-    })
+    )        
   }
 
   return (
@@ -155,7 +156,7 @@ const Cart = () => {
                     <Row>
                     <button className='to-cus-btn u-margin-bottom-small' onClick={placeOrderHandler}>Đặt món</button>
                     </Row>
-                    <span style={{fontSize:"small"}}><strong>Chú ý: </strong>Sau khi nhấn chọn <strong>"Đặt Món"</strong>, nếu muốn thay đổi đơn hàng, vui lòng liên hệ với phục vụ nhà hàng</span>
+                    <span style={{fontSize:"small"}}><strong>Chú ý: </strong>Sau khi nhấn chọn <strong>"Đặt món"</strong>, nếu muốn thay đổi đơn hàng, vui lòng liên hệ với phục vụ nhà hàng</span>
                   </div>
                 )}
               </Offcanvas.Body>
