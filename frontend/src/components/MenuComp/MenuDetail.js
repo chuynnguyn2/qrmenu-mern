@@ -21,10 +21,17 @@ import {
   productCreate,
   updateProduct,
 } from '../../actions/productActions'
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from 'firebase/storage'
+import { storage } from '../../config/db'
 
 const MenuDetail = ({ selectCatId }) => {
   const [selectCat, setSelectCat] = useState(selectCatId)
-  console.log(selectCat)
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -34,8 +41,8 @@ const MenuDetail = ({ selectCatId }) => {
 
   const [addProName, setAddProName] = useState()
   const [addProDes, setAddProDes] = useState()
+  const [addProMaterial, setAddProMaterial] = useState()
   const [addProPrice, setAddProPrice] = useState()
-  const [addProImage, setAddProImage] = useState('/upload/jgk.jpg')
   const [addProFeatured, setAddProFeatured] = useState(false)
 
   const [editPro, setEditPro] = useState()
@@ -43,8 +50,9 @@ const MenuDetail = ({ selectCatId }) => {
   const [editProName, setEditProName] = useState()
   const [editProDes, setEditProDes] = useState()
   const [editProPrice, setEditProPrice] = useState()
-  const [editProImage, setEditProImage] = useState('/upload/jgk.jpg')
   const [editProFeatured, setEditProFeatured] = useState(false)
+  const [imgUrl, setImgUrl] = useState('')
+  console.log(imgUrl)
 
   const product = useSelector((state) => state.productList)
   const { loading, error, products } = product
@@ -52,27 +60,24 @@ const MenuDetail = ({ selectCatId }) => {
   const [addProModal, setAddProModal] = useState(false)
 
   // UPLOADING IMAGE PRODUCT
-  const [uploading, setUploading] = useState(false)
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+  const uniqueId = Date.now().toString()
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+  const [file, setFile] = useState('')
+  const handleChange = (e) => {
+    setFile(e.target.files[0])
+  }
+  const handleUpload = () => {
+    if (file) {
+      const metadata = {
+        contentType: 'image/jpeg',
       }
+      const imageRef = ref(storage, `users/${userUID}/${selectCat}/${uniqueId}`)
+      const uploadTask = uploadBytesResumable(imageRef, file, metadata)
 
-      const { data } = await axios.post('/api/upload', formData, config)
-
-      setAddProImage(data)
-      setUploading(false)
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        console.log('File available at', downloadURL)
+        setImgUrl(downloadURL)
+      })
     }
   }
 
@@ -93,7 +98,6 @@ const MenuDetail = ({ selectCatId }) => {
 
       const { data } = await axios.post('/api/upload', formData, config)
 
-      setEditProImage(data)
       setEditUploading(false)
     } catch (error) {
       console.error(error)
@@ -245,11 +249,24 @@ const MenuDetail = ({ selectCatId }) => {
               }}
             ></Form.Control>
           </Form.Group>
+          <Form.Group controlId='password' className='mb-3'>
+            <Form.Label>Nguyên Liệu:</Form.Label>
+            <Form.Control
+              type='name'
+              placeholder='Nhập vào nguyên liệu'
+              onChange={(e) => {
+                setAddProMaterial(e.target.value)
+              }}
+            ></Form.Control>
+          </Form.Group>
 
           <Form.Group controlId='image' className='mb-3'>
             <Form.Label>Hình Ảnh :</Form.Label>
-            <Form.Control type='file' onChange={uploadFileHandler} />
-            {uploading && <Spinner animation='border' />}
+            <Form.Control
+              type='file'
+              accept='image/*'
+              onChange={handleChange}
+            />
           </Form.Group>
 
           <Form.Group controlId='password' className='mb-3'>
@@ -283,16 +300,19 @@ const MenuDetail = ({ selectCatId }) => {
               style={{ backgroundColor: '#E80F88', border: 'none' }}
               className='mx-2'
               onClick={() => {
+                handleUpload()
                 dispatch(
-                  productCreate(
-                    addProName,
-                    selectCatId,
-                    userInfo._id,
-                    addProImage,
-                    addProDes,
-                    addProPrice,
-                    addProFeatured
-                  )
+                  productCreate({
+                    user: userUID,
+                    cat: selectCat,
+                    id: uniqueId,
+                    name: addProName,
+                    description: addProDes,
+                    imgUrl: imgUrl,
+                    isHot: addProFeatured,
+                    material: addProMaterial,
+                    price: addProPrice,
+                  })
                 )
                 setAddProModal(false)
               }}
@@ -380,7 +400,6 @@ const MenuDetail = ({ selectCatId }) => {
                     updateProduct({
                       _id: editPro._id,
                       name: editProName,
-                      image: editProImage,
                       description: editProDes,
                       price: editProPrice,
                       isFeatured: editProFeatured,

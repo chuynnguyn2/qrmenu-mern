@@ -44,35 +44,31 @@ export const listProducts = (userUID) => async (dispatch, getState) => {
 }
 
 export const productCreate =
-  (name, category, restaurant, user, image, description, price, isFeatured) =>
-  async (dispatch, getState) => {
+  ({ name, user, id, cat, imgUrl, description, price, isHot, material }) =>
+  async (dispatch) => {
     try {
       dispatch({
         type: PRODUCT_CREATE_REQUEST,
       })
 
-      const {
-        userLogin: { userInfo },
-      } = getState()
-
       const config = {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
         },
       }
 
       const { data } = await axios.post(
-        `api/product?category=${category}`,
+        `api/product`,
         {
-          name,
-          category,
-          restaurant,
-          user,
-          image,
-          description,
-          price,
-          isFeatured,
+          user: user,
+          cat: cat,
+          id: id,
+          name: name,
+          description: description,
+          imgUrl: imgUrl,
+          isHot: isHot,
+          material: material,
+          price: price,
         },
         config
       )

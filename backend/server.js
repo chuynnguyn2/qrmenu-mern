@@ -7,7 +7,6 @@ import restaurantRouter from './routes/restaurantRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import productRouter from './routes/productRoutes.js'
-import uploadRouter from './routes/uploadRoutes.js'
 import orderRouter from './routes/orderRoutes.js'
 
 dotenv.config()
@@ -19,7 +18,6 @@ app.use(express.json())
 app.use('/api/product', productRouter)
 app.use('/api/category', categoryRouter)
 app.use('/api/restaurant', restaurantRouter)
-app.use('/api/upload', uploadRouter)
 app.use('/api/order', orderRouter)
 app.use('/api', userRouter)
 
