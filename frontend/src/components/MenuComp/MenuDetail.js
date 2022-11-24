@@ -18,12 +18,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
   deleteProduct,
-  listProducts,
   productCreate,
   updateProduct,
 } from '../../actions/productActions'
 
 const MenuDetail = ({ selectCatId }) => {
+  const [selectCat, setSelectCat] = useState(selectCatId)
+  console.log(selectCat)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -99,7 +100,9 @@ const MenuDetail = ({ selectCatId }) => {
       setEditUploading(false)
     }
   }
-  useEffect(() => {}, [dispatch, navigate, userInfo])
+  useEffect(() => {
+    setSelectCat(selectCatId)
+  }, [dispatch, navigate, selectCatId, userInfo, selectCat])
 
   return (
     <Container>
@@ -110,7 +113,7 @@ const MenuDetail = ({ selectCatId }) => {
           </span>
           <button
             className='light-btn ms-auto my-1'
-            disabled={!selectCatId}
+            disabled={selectCatId === ''}
             onClick={() => {
               setAddProModal(true)
             }}
@@ -119,66 +122,101 @@ const MenuDetail = ({ selectCatId }) => {
           </button>
         </Stack>
       </Row>
-      {products.map((pro) => (
+      {selectCat === '' ? (
+        <>Chọn danh mục bên phải để xem danh sách món ăn</>
+      ) : (
         <>
-          <Row className='menu-detail-food-row'>
-            <Col className=' col-1' style={{ paddingRight: '0' }}>
-              <img
-                src={pro.image}
-                alt={pro.name}
-                className='menu-detail-food-row-img img-fluid'
-              ></img>
-            </Col>
-            <Col className='col-3' style={{ paddingRight: '0' }}>
-              <span className='menu-detail-food-row-name'>{pro.name}</span>
-            </Col>
-            <Col className='' style={{ paddingRight: '0' }}>
-              <span className='menu-detail-food-row-des'>
-                {pro.description}
-              </span>
-            </Col>
-            <Col
-              className='col-1'
-              style={{ paddingRight: '0', textAlign: 'center' }}
-            >
-              <span className='menu-detail-food-row-price'>{pro.price}</span>
-            </Col>
-            <Col
-              className='col-1'
-              style={{ padding: '0', textAlign: 'center' }}
-            >
-              <span className='menu-detail-food-row-featured'>
-                {pro.isFeatured ? <>HOT</> : null}
-              </span>
-            </Col>
-            <Col
-              className='col-1'
-              style={{
-                fontSize: 'large',
-                overflow: 'hidden',
-                paddingRight: '0',
-              }}
-            >
-              <i
-                className='fa-solid fa-pencil me-2'
-                onClick={() => {
-                  setEditPro(pro)
-                  setEditProModal(true)
-                }}
-                style={{ fontSize: 'large', cursor: 'pointer' }}
-              ></i>
-              <i
-                className='fa-solid fa-trash-can'
-                onClick={() => {
-                  dispatch(deleteProduct(pro._id, selectCatId))
-                }}
-                style={{ fontSize: 'large', cursor: 'pointer' }}
-              ></i>
-            </Col>
-          </Row>
-          <hr></hr>
+          {products.map((pro) => (
+            <>
+              {pro.cat === selectCat ? (
+                <>
+                  <Row className='menu-detail-food-row'>
+                    <Col className=' col-2' style={{ paddingRight: '0' }}>
+                      <img
+                        src={pro.imgUrl}
+                        alt={pro.name}
+                        className='menu-detail-food-row-img img-fluid'
+                      ></img>
+                    </Col>
+                    <Col className='col-2' style={{ paddingRight: '0' }}>
+                      <span className='menu-detail-food-row-name'>
+                        {pro.name}
+                      </span>
+                    </Col>
+                    <Col
+                      className='col-2'
+                      style={{
+                        paddingRight: '0',
+                        fontSize: 'xx-small',
+                      }}
+                    >
+                      <span className='menu-detail-food-row-des'>
+                        {pro.material}
+                      </span>
+                    </Col>
+                    <Col
+                      className=''
+                      style={{
+                        paddingRight: '0',
+                        fontSize: 'xx-small',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      <span className='menu-detail-food-row-des'>
+                        {pro.description}
+                      </span>
+                    </Col>
+                    <Col
+                      className='col-2'
+                      style={{ paddingRight: '0', textAlign: 'center' }}
+                    >
+                      <span className='menu-detail-food-row-price'>
+                        {pro.price},000vnđ
+                      </span>
+                    </Col>
+                    <Col
+                      className='col-1'
+                      style={{ padding: '0', textAlign: 'center' }}
+                    >
+                      <span className='menu-detail-food-row-featured'>
+                        {pro.isHot ? <>HOT</> : null}
+                      </span>
+                    </Col>
+                    <Col
+                      className='col-1'
+                      style={{
+                        fontSize: 'large',
+                        overflow: 'hidden',
+                        paddingRight: '0',
+                      }}
+                    >
+                      <i
+                        className='fa-solid fa-pencil me-2'
+                        onClick={() => {
+                          setEditPro(pro)
+                          setEditProModal(true)
+                        }}
+                        style={{ fontSize: 'large', cursor: 'default' }}
+                      ></i>
+                      <i
+                        className='fa-solid fa-trash-can'
+                        onClick={() => {
+                          dispatch(deleteProduct({ id: pro.id, user: userUID }))
+                        }}
+                        style={{ fontSize: 'large', cursor: 'default' }}
+                      ></i>
+                    </Col>
+                  </Row>
+                  <hr></hr>
+                </>
+              ) : (
+                <></>
+              )}
+            </>
+          ))}
         </>
-      ))}
+      )}
 
       {/* CREATE PRODUCT MODAL */}
       <Modal show={addProModal} onHide={() => setAddProModal(!addProModal)}>

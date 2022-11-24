@@ -9,10 +9,11 @@ import {
   updateRestaurant,
 } from '../controllers/restaurantControllers.js'
 
-restaurantRouter.route('/').get(getRestaurants).post(createRestaurant)
 restaurantRouter
-  .route('/:restaurantId')
-  .delete(deleteRestaurant)
+  .route('/')
+  .get(getRestaurants)
+  .post(createRestaurant)
   .put(updateRestaurant)
+  .delete(deleteRestaurant)
 
 export default restaurantRouter

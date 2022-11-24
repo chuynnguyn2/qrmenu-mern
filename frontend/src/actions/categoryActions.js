@@ -94,34 +94,25 @@ export const updateCategory = (category) => async (dispatch, getState) => {
   }
 }
 
-export const deleteCategory = (id) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: CATEGORY_DELETE_REQUEST,
-    })
+export const deleteCategory =
+  ({ id, user }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CATEGORY_DELETE_REQUEST,
+      })
+      await axios.delete(`/api/category`, { data: { id: id, user: user } })
 
-    const {
-      userLogin: { userInfo },
-    } = getState()
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
+      dispatch({
+        type: CATEGORY_DELETE_SUCCESS,
+      })
+    } catch (error) {
+      dispatch({
+        type: CATEGORY_DELETE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
     }
-
-    await axios.delete(`/api/category/${id}`, config)
-
-    dispatch({
-      type: CATEGORY_DELETE_SUCCESS,
-    })
-  } catch (error) {
-    dispatch({
-      type: CATEGORY_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
   }
-}

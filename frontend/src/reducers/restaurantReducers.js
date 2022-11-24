@@ -31,7 +31,7 @@ export const restaurantCreateReducer = (state = {}, action) => {
     case RESTAURANT_CREATE_REQUEST:
       return { loading: true }
     case RESTAURANT_CREATE_SUCCESS:
-      return { loading: false, success: true, createRestaurant: action.payload }
+      return { loading: false, success: true }
     case RESTAURANT_CREATE_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -47,7 +47,7 @@ export const restaurantUpdateReducer = (
     case RESTAURANT_EDIT_REQUEST:
       return { loading: true }
     case RESTAURANT_EDIT_SUCCESS:
-      return { loading: false, success: true, updateRestaurant: action.payload }
+      return { loading: false, success: true }
     case RESTAURANT_EDIT_FAIL:
       return { loading: false, error: action.payload }
 

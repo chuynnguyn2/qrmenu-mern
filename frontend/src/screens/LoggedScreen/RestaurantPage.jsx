@@ -26,8 +26,6 @@ const RestaurantPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const [selectRes, setSelectRes] = useState()
-
   const restaurantList = useSelector((state) => state.restaurantList)
   const { loading, error, restaurants } = restaurantList
 
@@ -41,13 +39,13 @@ const RestaurantPage = () => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
   const userId = userInfo.user.uid
+  const userUID = userInfo.user.uid
 
   const createdRestaurant = useSelector((state) => state.createRestaurant)
   const {
     loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
-    createRestaurant: createRestaurants,
   } = createdRestaurant
 
   const [showModel, setShowModel] = useState(false)
@@ -55,35 +53,18 @@ const RestaurantPage = () => {
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
 
-  let disable = false
-  if (userInfo.type === 'small') {
-    if (restaurants.length > 0) {
-      disable = true
-    }
-  }
-  if (userInfo.type === 'medium') {
-    if (restaurants.length > 2) {
-      disable = true
-    }
-  }
-  if (userInfo.type === 'large') {
-    if (restaurants.length > 4) {
-      disable = true
-    }
-  }
-
   useEffect(() => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listRestaurants(userId))
+      dispatch(listRestaurants(userUID))
     }
 
     if (successCreate || successDelete) {
-      dispatch(listRestaurants(userId))
+      dispatch(listRestaurants(userUID))
       setShowModel(false)
     }
-  }, [dispatch, navigate, successCreate, successDelete, selectRes])
+  }, [dispatch, navigate, successCreate, successDelete, userInfo, userUID])
 
   return (
     <div className='restaurant mx-6rem'>
@@ -146,7 +127,7 @@ const RestaurantPage = () => {
                 className='mx-3'
                 variant='primary'
                 onClick={() => {
-                  dispatch(restaurantCreate(name, userId, address, phone))
+                  dispatch(restaurantCreate(name, userUID, address, phone))
                 }}
               >
                 Thêm
@@ -165,63 +146,13 @@ const RestaurantPage = () => {
           <Container fluid>
             <Row style={{ margin: '0', maxWidth: '100%' }}>
               <Col
-                className='restaurant-list me-4'
-                lg={4}
-                md={4}
-                sm={4}
-                xl={4}
-                xs={4}
-                xxl={4}
-              >
-                <Row className='u-margin-bottom-small'>
-                  <span className='span-large'>
-                    <strong>Các nhà hàng của bạn</strong>
-                  </span>
-                </Row>
-                <Row className='u-margin-bottom-small'>
-                  {restaurants.map((res) => (
-                    <Stack
-                      direction='horizontal'
-                      className='restaurant-list-stack my-3'
-                    >
-                      <button
-                        className='span-medium restaurant-list-stack-text'
-                        onClick={() => {
-                          setSelectRes(res)
-                        }}
-                      >
-                        {res.name}
-                      </button>
-                    </Stack>
-                  ))}
-                </Row>
-                <Row>
-                  <button
-                    className='light-btn py-2 btn-add-res'
-                    onClick={() => {
-                      setShowModel(true)
-                    }}
-                    disabled={disable}
-                  >
-                    Thêm Nhà Hàng
-                  </button>
-                  {disable && (
-                    <span className='u-margin-top-small'>
-                      <strong>Lưu Ý: </strong> Số lượng nhà hàng của bạn đã vượt
-                      quá số lượng, vui lòng đăng ký gói dịch vụ cao cấp hơn để
-                      thêm nhà hàng
-                    </span>
-                  )}
-                </Row>
-              </Col>
-              <Col
                 className='restaurant-detail'
-                lg={7}
-                md={7}
-                sm={7}
-                xl={7}
-                xs={7}
-                xxl={7}
+                lg={10}
+                md={10}
+                sm={10}
+                xl={10}
+                xs={10}
+                xxl={10}
                 style={{ backgroundColor: '#fff' }}
               >
                 <Row
@@ -232,9 +163,7 @@ const RestaurantPage = () => {
                     <strong>Thông tin nhà hàng</strong>
                   </span>
                 </Row>
-                {selectRes && (
-                  <RestaurantDetail restaurant={selectRes}></RestaurantDetail>
-                )}
+                <RestaurantDetail></RestaurantDetail>
               </Col>
             </Row>
           </Container>

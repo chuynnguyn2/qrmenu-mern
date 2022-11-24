@@ -28,6 +28,9 @@ const ResDetailInfo = ({ restaurant }) => {
 
   const deleteRes = useSelector((state) => state.deleteRestaurant)
   const { loading, success, error } = deleteRes
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const userUID = userInfo.user.uid
 
   useEffect(() => {
     if (success) {
@@ -55,7 +58,7 @@ const ResDetailInfo = ({ restaurant }) => {
             className='mx-3'
             variant='primary'
             onClick={() => {
-              dispatch(deleteRestaurant(restaurant._id))
+              dispatch(deleteRestaurant({ id: restaurant.id, user: userUID }))
             }}
           >
             Xóa
@@ -168,16 +171,17 @@ const ResDetailInfo = ({ restaurant }) => {
       </div>
       <div className='d-flex justify-content-end my-2'>
         {editable ? (
-          <div> 
+          <div>
             <button
               onClick={() => {
                 setEditable(!editable)
                 dispatch(
                   updateRestaurant({
-                    _id: restaurant._id,
+                    id: restaurant.id,
                     name: editName,
                     address: editAddress,
                     phone: editPhone,
+                    user: userUID,
                   })
                 )
               }}

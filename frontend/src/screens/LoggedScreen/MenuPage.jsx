@@ -33,12 +33,12 @@ const MenuPage = () => {
   const { loading, success, restaurants } = res
   const cats = useSelector((state) => state.categoryList)
   const { loading: loadingCat, error: errorCat, categories } = cats
-  const [category, setCategory] = useState(categories)
-  console.log(category, categories)
+  let category = categories
+
   const [addCatModal, setAddCatModal] = useState(false)
   const [addCatName, setaddCatName] = useState()
 
-  const [selectCatId, setSelectCatId] = useState()
+  const [selectCatId, setSelectCatId] = useState('')
   const [editCatModal, setEditCatModal] = useState(false)
   const [editCatName, setEditCatName] = useState()
   const [editCatId, setEditCatId] = useState()
@@ -59,14 +59,10 @@ const MenuPage = () => {
   const {
     loading: loadingEditCat,
     success: successEditCat,
-    updateCategory,
+    updateCat,
   } = editCats
   const deleteCats = useSelector((state) => state.deleteCategory)
-  const {
-    loading: loadingDeleteCat,
-    success: successDeleteCat,
-    deleteCategory,
-  } = deleteCats
+  const { loading: loadingDeleteCat, success: successDeleteCat } = deleteCats
 
   const createPro = useSelector((state) => state.createProduct)
   const {
@@ -101,7 +97,7 @@ const MenuPage = () => {
     )
     const [orderedCategory] = categoryItems.splice(result.source.index, 1)
     categoryItems.splice(result.destination.index, 0, orderedCategory)
-    setCategory(categoryItems)
+    category = categoryItems
   }
 
   useEffect(() => {
@@ -110,19 +106,19 @@ const MenuPage = () => {
     } else {
       dispatch(listRestaurants(userUID))
       dispatch(listCategories(userUID))
-      setCategory(categories)
+      dispatch(listProducts(userUID))
     }
     if (successCreateCat || successEditCat || successDeleteCat) {
       dispatch(listCategories(userUID))
     }
     if (successCreatePro) {
-      dispatch(listProducts(createProduct.category))
+      dispatch(listProducts(userUID))
     }
     if (successEditPro) {
-      dispatch(listProducts(updateProduct.category))
+      dispatch(listProducts(userUID))
     }
     if (successDeletePro) {
-      dispatch(listProducts(catId))
+      dispatch(listProducts(userUID))
     }
   }, [
     dispatch,
@@ -134,6 +130,7 @@ const MenuPage = () => {
     successCreatePro,
     successEditPro,
     successDeletePro,
+    userUID,
   ])
 
   return (
@@ -201,7 +198,6 @@ const MenuPage = () => {
                             <button
                               className='menu-list-stack-text'
                               onClick={() => {
-                                dispatch(listProducts(cat.id))
                                 setSelectCatId(cat.id)
                               }}
                             >
@@ -211,12 +207,15 @@ const MenuPage = () => {
                               className='fa-solid fa-pencil'
                               onClick={() => {
                                 setEditCatId(cat.id)
+                                setEditCatModal(!editCatModal)
                               }}
                             ></i>
                             <i
                               className='fa-solid fa-trash-can'
                               onClick={() => {
-                                dispatch(deleteCategory(cat._id))
+                                dispatch(
+                                  deleteCategory({ id: cat.id, user: userUID })
+                                )
                               }}
                             ></i>
                           </Stack>
@@ -254,6 +253,7 @@ const MenuPage = () => {
           </Col>
         </Row>
       </Container>
+      {/* ADD CAT MODAL */}
       <Modal
         show={addCatModal}
         onHide={() => {
@@ -301,7 +301,7 @@ const MenuPage = () => {
           </Button>
         </ModalFooter>
       </Modal>
-      {/* EDIT MODAL */}
+      {/* EDIT CAT MODAL */}
 
       <Modal
         show={editCatModal}

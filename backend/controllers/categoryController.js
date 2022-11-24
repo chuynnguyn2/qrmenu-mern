@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import { db } from '../config/db.js'
-import { doc, setDoc, getDocs, getDoc, collection } from 'firebase/firestore'
+import { doc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore'
 import { runTransaction } from 'firebase/firestore'
 import { query, orderBy, limit } from 'firebase/firestore'
 
@@ -44,15 +44,18 @@ const createCategory = asyncHandler(async (req, res) => {
 // @route   DELETE /api/category/:categoryId
 // @access  Private/Admin
 const deleteCategory = asyncHandler(async (req, res) => {
-  const category = await Category.findById(req.params.categoryId)
+  const { id, user } = req.body
 
-  if (category) {
-    await category.remove()
-    res.json({ message: 'Category removed' })
-  } else {
-    res.status(404)
-    throw new Error('Category not found')
-  }
+  const docRef = doc(db, 'users', user, 'menu', id)
+
+  await deleteDoc(docRef)
+    .then((data) => {
+      console.log('sucess delete category')
+      res.json(data)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 })
 
 // @desc    Update a category
@@ -74,7 +77,7 @@ const updateCategory = asyncHandler(async (req, res) => {
     })
   })
     .then((data) => {
-      console.log('Transaction successfully committed!')
+      console.log('Category update successfully committed!')
       res.json(data)
     })
     .catch((e) => {

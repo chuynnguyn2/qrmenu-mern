@@ -13,7 +13,7 @@ import {
 } from '../constants/productConstants'
 import axios from 'axios'
 
-export const listProducts = (categoryId) => async (dispatch, getState) => {
+export const listProducts = (userUID) => async (dispatch, getState) => {
   // const {
   //   userLogin: { userInfo },
   // } = getState()
@@ -27,10 +27,7 @@ export const listProducts = (categoryId) => async (dispatch, getState) => {
 
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST })
-    const { data } = await axios.get(
-      `/api/product?category=${categoryId}`,
-      config
-    )
+    const { data } = await axios.get(`/api/product?user=${userUID}`, config)
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: data,
@@ -67,7 +64,16 @@ export const productCreate =
 
       const { data } = await axios.post(
         `api/product?category=${category}`,
-        { name, category, restaurant, user, image, description, price, isFeatured },
+        {
+          name,
+          category,
+          restaurant,
+          user,
+          image,
+          description,
+          price,
+          isFeatured,
+        },
         config
       )
       dispatch({
@@ -123,27 +129,16 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   }
 }
 
-export const deleteProduct = (id, catId) => async (dispatch, getState) => {
+export const deleteProduct = (id, user) => async (dispatch) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
     })
 
-    const {
-      userLogin: { userInfo },
-    } = getState()
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    }
-
-    await axios.delete(`/api/product/${id}`, catId, config)
+    await axios.delete(`/api/product`)
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
-      payload:catId,
     })
   } catch (error) {
     dispatch({

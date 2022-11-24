@@ -72,32 +72,19 @@ export const restaurantCreate =
     }
   }
 
-export const updateRestaurant = (restaurant) => async (dispatch, getState) => {
+export const updateRestaurant = (restaurant) => async (dispatch) => {
   try {
     dispatch({
       type: RESTAURANT_EDIT_REQUEST,
     })
-
-    const {
-      userLogin: { userInfo },
-    } = getState()
-
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     }
-
-    const { data } = await axios.put(
-      `/api/restaurant/${restaurant._id}`,
-      restaurant,
-      config
-    )
-
+    await axios.put(`/api/restaurant`, restaurant, config)
     dispatch({
       type: RESTAURANT_EDIT_SUCCESS,
-      payload: data,
     })
   } catch (error) {
     dispatch({
@@ -110,34 +97,25 @@ export const updateRestaurant = (restaurant) => async (dispatch, getState) => {
   }
 }
 
-export const deleteRestaurant = (id) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: RESTAURANT_DELETE_REQUEST,
-    })
+export const deleteRestaurant =
+  ({ id, user }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: RESTAURANT_DELETE_REQUEST,
+      })
+      await axios.delete(`/api/restaurant`, { data: { id: id, user: user } })
 
-    const {
-      userLogin: { userInfo },
-    } = getState()
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
+      dispatch({
+        type: RESTAURANT_DELETE_SUCCESS,
+      })
+    } catch (error) {
+      dispatch({
+        type: RESTAURANT_DELETE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
     }
-
-    await axios.delete(`/api/restaurant/${id}`, config)
-
-    dispatch({
-      type: RESTAURANT_DELETE_SUCCESS,
-    })
-  } catch (error) {
-    dispatch({
-      type: RESTAURANT_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
   }
-}

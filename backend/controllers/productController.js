@@ -1,16 +1,21 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
 import Category from '../models/categoryModel.js'
+import { db } from '../config/db.js'
+import { doc, setDoc, getDocs, getDoc, collection } from 'firebase/firestore'
+import { runTransaction } from 'firebase/firestore'
 
 // @desc    Fetch all products
-// @route   GET /api/product?category
+// @route   GET /api/product?user
 //@access   Public
 const getProducts = asyncHandler(async (req, res) => {
-  let filter = {}
-  if (req.query.category) {
-    filter = { category: req.query.category }
-  }
-  const products = await Product.find(filter).sort({isFeatured:-1})
+  const user = req.query.user
+  const productsRef = collection(db, 'users', user, 'food')
+  const querySnapshot = await getDocs(productsRef)
+  let products = []
+  querySnapshot.forEach((doc) => {
+    products.push(doc.data())
+  })
   res.json(products)
 })
 
@@ -35,7 +40,16 @@ const createProduct = asyncHandler(async (req, res) => {
     throw new Error('Invalid Category')
   }
 
-  const { category, name, image, description, price, isFeatured, restaurant, user } = req.body
+  const {
+    category,
+    name,
+    image,
+    description,
+    price,
+    isFeatured,
+    restaurant,
+    user,
+  } = req.body
 
   const productExists = await Product.findOne({ name })
 
@@ -51,7 +65,7 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     isFeatured,
     restaurant,
-    user
+    user,
   })
 
   if (product) {
@@ -64,7 +78,7 @@ const createProduct = asyncHandler(async (req, res) => {
       price: product.price,
       isFeatured: product.isFeatured,
       restaurant: product.restaurant,
-      user: product.user
+      user: product.user,
     })
   } else {
     res.status(400)
@@ -81,7 +95,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
   if (product) {
     await product.remove()
-    res.json({catId:catId})
+    res.json({ catId: catId })
   } else {
     res.status(404)
     throw new Error('Product not found')

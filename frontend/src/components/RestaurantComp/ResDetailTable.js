@@ -18,19 +18,23 @@ import { updateRestaurant } from '../../actions/restaurantActions'
 
 const ResDetailTable = ({ restaurant }) => {
   const dispatch = useDispatch()
-  const [tableNo, setTableNo] = useState(restaurant.tableNo)
+  const [table, setTable] = useState(restaurant.table)
   const [size, setSize] = useState(256)
   const [back, setBack] = useState('#FFFFFF')
   const [fore, setFore] = useState('#000000')
   const [showModel, setShowModel] = useState(false)
   const [wifi, setWifi] = useState(restaurant.wifi)
-  const [password, setPassword] = useState(restaurant.password)
+  const [password, setPassword] = useState(restaurant.wifiPassword)
   const updatedRestaurant = useSelector((state) => state.editRestaurant)
-  const { loading, success, error, updateRes } = updatedRestaurant
+  const { loading, success, error } = updatedRestaurant
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const userUID = userInfo.user.uid
 
   let tableLinks = []
-  for (let i = 1; i <= tableNo; i++) {
-    tableLinks.push(`http://localhost:3000/menu/${restaurant._id}?table=${i}`)
+  for (let i = 1; i <= table; i++) {
+    tableLinks.push(`http://localhost:3000/menu/${userUID}?table=${i}`)
   }
 
   useEffect(() => {
@@ -57,6 +61,7 @@ const ResDetailTable = ({ restaurant }) => {
                   <Form.Label>Tên Wifi</Form.Label>
                   <Form.Control
                     type='name'
+                    value={wifi}
                     onChange={(e) => {
                       setWifi(e.target.value)
                     }}
@@ -66,6 +71,7 @@ const ResDetailTable = ({ restaurant }) => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type='name'
+                    value={password}
                     onChange={(e) => {
                       setPassword(e.target.value)
                     }}
@@ -119,10 +125,10 @@ const ResDetailTable = ({ restaurant }) => {
             onClick={() => {
               dispatch(
                 updateRestaurant({
-                  _id: restaurant._id,
+                  id: restaurant.id,
                   wifi: wifi,
-                  password: password,
-                  phone: restaurant.phone,
+                  wifiPassword: password,
+                  user: userUID,
                 })
               )
             }}
@@ -146,14 +152,14 @@ const ResDetailTable = ({ restaurant }) => {
           id='inputTableNo'
           placeholder='0'
           style={{ display: 'inline-block', width: '10%' }}
-          value={tableNo}
+          value={table}
           onChange={(event) => {
-            setTableNo(event.target.value.replace(/\D/, ''))
+            setTable(Number(event.target.value.replace(/\D/, '')))
             dispatch(
               updateRestaurant({
-                _id: restaurant._id,
-                phone: restaurant.phone,
-                tableNo: event.target.value.replace(/\D/, ''),
+                id: restaurant.id,
+                table: Number(event.target.value.replace(/\D/, '')),
+                user: userUID,
               })
             )
           }}
