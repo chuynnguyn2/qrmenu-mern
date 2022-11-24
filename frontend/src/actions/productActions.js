@@ -93,26 +93,16 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       type: PRODUCT_EDIT_REQUEST,
     })
 
-    const {
-      userLogin: { userInfo },
-    } = getState()
-
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     }
 
-    const { data } = await axios.put(
-      `/api/product/${product._id}`,
-      product,
-      config
-    )
+    await axios.put(`/api/product`, product, config)
 
     dispatch({
       type: PRODUCT_EDIT_SUCCESS,
-      payload: data,
     })
   } catch (error) {
     dispatch({

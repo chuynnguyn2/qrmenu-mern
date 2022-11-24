@@ -44,15 +44,17 @@ const MenuDetail = ({ selectCatId }) => {
   const [addProMaterial, setAddProMaterial] = useState()
   const [addProPrice, setAddProPrice] = useState()
   const [addProFeatured, setAddProFeatured] = useState(false)
+  const [imgUrl, setImgUrl] = useState('')
 
   const [editPro, setEditPro] = useState()
+  const [editProMaterial, setEditProMaterial] = useState()
   const [editProModal, setEditProModal] = useState(false)
   const [editProName, setEditProName] = useState()
   const [editProDes, setEditProDes] = useState()
   const [editProPrice, setEditProPrice] = useState()
   const [editProFeatured, setEditProFeatured] = useState(false)
-  const [imgUrl, setImgUrl] = useState('')
-  console.log(imgUrl)
+  const [editProImg, setEditProImg] = useState('')
+  console.log(editProImg)
 
   const product = useSelector((state) => state.productList)
   const { loading, error, products } = product
@@ -63,6 +65,7 @@ const MenuDetail = ({ selectCatId }) => {
   const uniqueId = Date.now().toString()
 
   const [file, setFile] = useState('')
+  const [editFile, setEditFile] = useState('')
   const handleChange = (e) => {
     setFile(e.target.files[0])
   }
@@ -75,33 +78,26 @@ const MenuDetail = ({ selectCatId }) => {
       const uploadTask = uploadBytesResumable(imageRef, file, metadata)
 
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log('File available at', downloadURL)
         setImgUrl(downloadURL)
       })
     }
   }
 
   // EDIT IMAGE PRODUCT
-  const [editUploading, setEditUploading] = useState(false)
-  const editFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setEditUploading(true)
-
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+  const editFileChange = (e) => {
+    setEditFile(e.target.files[0])
+  }
+  const editFileUpload = (id) => {
+    if (editFile) {
+      const metadata = {
+        contentType: 'image/jpeg',
       }
+      const imageRef = ref(storage, `users/${userUID}/${selectCat}/${id.id}`)
+      const uploadTask = uploadBytesResumable(imageRef, editFile, metadata)
 
-      const { data } = await axios.post('/api/upload', formData, config)
-
-      setEditUploading(false)
-    } catch (error) {
-      console.error(error)
-      setEditUploading(false)
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        setEditProImg(downloadURL)
+      })
     }
   }
   useEffect(() => {
@@ -199,6 +195,12 @@ const MenuDetail = ({ selectCatId }) => {
                         className='fa-solid fa-pencil me-2'
                         onClick={() => {
                           setEditPro(pro)
+                          setEditProDes(pro.description)
+                          setEditProFeatured(pro.isHot)
+                          setEditProImg(pro.imgUrl)
+                          setEditProMaterial(pro.material)
+                          setEditProName(pro.name)
+                          setEditProPrice(pro.price)
                           setEditProModal(true)
                         }}
                         style={{ fontSize: 'large', cursor: 'default' }}
@@ -343,7 +345,7 @@ const MenuDetail = ({ selectCatId }) => {
               <Form.Label>Tên Món Ăn:</Form.Label>
               <Form.Control
                 type='name'
-                placeholder={editPro.name}
+                value={editProName}
                 onChange={(e) => {
                   setEditProName(e.target.value)
                 }}
@@ -354,7 +356,17 @@ const MenuDetail = ({ selectCatId }) => {
               <Form.Label>Mô Tả:</Form.Label>
               <Form.Control
                 type='name'
-                placeholder={editPro.des}
+                value={editProDes}
+                onChange={(e) => {
+                  setEditProDes(e.target.value)
+                }}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId='password'>
+              <Form.Label>Nguyên Liệu:</Form.Label>
+              <Form.Control
+                type='name'
+                value={editProMaterial}
                 onChange={(e) => {
                   setEditProDes(e.target.value)
                 }}
@@ -363,15 +375,14 @@ const MenuDetail = ({ selectCatId }) => {
 
             <Form.Group controlId='image' className='mb-3'>
               <Form.Label>Hình Ảnh :</Form.Label>
-              <Form.Control type='file' onChange={editFileHandler} />
-              {editUploading && <Spinner animation='border' />}
+              <Form.Control type='file' onChange={editFileChange} />
             </Form.Group>
 
             <Form.Group controlId='password'>
               <Form.Label>Giá tiền :</Form.Label>
               <Form.Control
                 type='name'
-                placeholder={editPro.price}
+                value={editProPrice}
                 onChange={(e) => {
                   setEditProPrice(e.target.value)
                 }}
@@ -396,13 +407,17 @@ const MenuDetail = ({ selectCatId }) => {
                 style={{ backgroundColor: '#E80F88', border: 'none' }}
                 className='mx-2'
                 onClick={() => {
+                  editFileUpload({ id: editPro.id })
                   dispatch(
                     updateProduct({
-                      _id: editPro._id,
+                      id: editPro.id,
                       name: editProName,
                       description: editProDes,
                       price: editProPrice,
-                      isFeatured: editProFeatured,
+                      isHot: editProFeatured,
+                      imgUrl: editProImg,
+                      material: editProMaterial,
+                      user: userUID,
                     })
                   )
                   setEditProModal(false)

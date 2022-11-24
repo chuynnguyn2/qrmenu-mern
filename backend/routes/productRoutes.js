@@ -10,11 +10,12 @@ import {
   deleteProduct,
 } from '../controllers/productController.js'
 
-productRouter.route('/').get(getProducts).post(createProduct)
 productRouter
-  .route('/:productId')
-  .get(getProductById)
+  .route('/')
+  .get(getProducts)
+  .post(createProduct)
   .put(updateProduct)
   .delete(deleteProduct)
+productRouter.route('/:productId').get(getProductById)
 
 export default productRouter

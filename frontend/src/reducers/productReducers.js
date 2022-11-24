@@ -31,7 +31,7 @@ export const productCreateReducer = (state = {}, action) => {
     case PRODUCT_CREATE_REQUEST:
       return { loading: true }
     case PRODUCT_CREATE_SUCCESS:
-      return { loading: false, success: true, createPRODUCT: action.payload }
+      return { loading: false, success: true }
     case PRODUCT_CREATE_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -44,7 +44,7 @@ export const productUpdateReducer = (state = { updateProduct: {} }, action) => {
     case PRODUCT_EDIT_REQUEST:
       return { loading: true }
     case PRODUCT_EDIT_SUCCESS:
-      return { loading: false, success: true, updateProduct: action.payload }
+      return { loading: false, success: true }
     case PRODUCT_EDIT_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -57,7 +57,7 @@ export const productDeleteReducer = (state = {}, action) => {
     case PRODUCT_DELETE_REQUEST:
       return { loading: true }
     case PRODUCT_DELETE_SUCCESS:
-      return { loading: false, success: true, catId: action.payload }
+      return { loading: false, success: true }
     case PRODUCT_DELETE_FAIL:
       return { loading: false, error: action.payload }
     default:

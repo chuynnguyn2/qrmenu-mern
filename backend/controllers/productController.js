@@ -79,23 +79,31 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/product/:productId
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, image, description, price, isFeatured } = req.body
+  const { name, user, id, imgUrl, description, price, isHot, material } =
+    req.body
+  const docRef = doc(db, 'users', user, 'food', id)
 
-  const product = await Product.findById(req.params.productId)
-
-  if (product) {
-    product.name = name || product.name
-    product.image = image || product.image
-    product.description = description || product.description
-    product.price = price || product.price
-    product.isFeatured = isFeatured || product.isFeatured
-
-    const updatedProduct = await product.save()
-    res.json(updatedProduct)
-  } else {
-    res.status(404)
-    throw new Error('Product not found')
-  }
+  await runTransaction(db, async (transaction) => {
+    const sfDoc = await transaction.get(docRef)
+    if (!sfDoc.exists()) {
+      throw 'Document does not exist!'
+    }
+    transaction.update(docRef, {
+      name: name || sfDoc.data().name,
+      imgUrl: imgUrl || sfDoc.data().imgUrl,
+      description: description || sfDoc.data().description,
+      price: price || sfDoc.data().price,
+      isHot: isHot || sfDoc.data().isHot,
+      material: material || sfDoc.data().material,
+    })
+  })
+    .then((data) => {
+      console.log('Product update successfully committed!')
+      res.json(data)
+    })
+    .catch((e) => {
+      console.log('Transaction failed: ', e)
+    })
 })
 
 export {
