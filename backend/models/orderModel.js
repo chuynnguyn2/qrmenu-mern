@@ -6,20 +6,20 @@ const orderSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Restaurant',
-    },   
+    },
     orderItems: [
       {
         qty: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
-        name: {type: String, required: true},
+        name: { type: String, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: 'Product',
         },
       },
-    ],    
+    ],
     table: {
       type: Number,
       required: true,
@@ -49,11 +49,11 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: 0.0,
     },
-    confirm:{
+    confirm: {
       type: Boolean,
-      require:true,
-      default:false,
-    }, 
+      require: true,
+      default: false,
+    },
     isDelivered: {
       type: Boolean,
       required: true,

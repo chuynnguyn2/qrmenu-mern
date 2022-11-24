@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { Tab, Tabs } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { listRestaurants } from '../../actions/restaurantActions'
 import { listCategories } from '../../actions/categoryActions'
+import { listRestaurants } from '../../actions/restaurantActions'
 import DashRes from '../../components/DashBoardComp/DashRes'
 
 // import DashRes from '../components/DashRes'
@@ -13,6 +13,7 @@ const DashBoardPage = () => {
   const dispatch = useDispatch()
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
+  const userUID = userInfo.user.uid
 
   const restaurantList = useSelector((state) => state.restaurantList)
   const { loading, error, restaurants } = restaurantList
@@ -21,9 +22,10 @@ const DashBoardPage = () => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listRestaurants(userInfo._id))      
+      dispatch(listRestaurants(userUID))
+      dispatch(listCategories(userUID))
     }
-  }, [dispatch, navigate, userInfo])
+  }, [dispatch, navigate, userUID])
 
   return (
     <>

@@ -14,10 +14,11 @@ import {
 } from '../constants/restaurantConstants'
 import axios from 'axios'
 
-export const listRestaurants = (userId) => async (dispatch) => {
+export const listRestaurants = (userUID) => async (dispatch) => {
   try {
     dispatch({ type: RESTAURANT_LIST_REQUEST })
-    const { data } = await axios.get(`/api/restaurant?user=${userId}`)
+
+    const { data } = await axios.get(`/api/restaurant?user=${userUID}`)
     dispatch({
       type: RESTAURANT_LIST_SUCCESS,
       payload: data,

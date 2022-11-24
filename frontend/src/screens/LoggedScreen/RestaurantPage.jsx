@@ -40,7 +40,7 @@ const RestaurantPage = () => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
-  const userId = userInfo._id  
+  const userId = userInfo.user.uid
 
   const createdRestaurant = useSelector((state) => state.createRestaurant)
   const {
@@ -58,7 +58,7 @@ const RestaurantPage = () => {
   let disable = false
   if (userInfo.type === 'small') {
     if (restaurants.length > 0) {
-      disable=true
+      disable = true
     }
   }
   if (userInfo.type === 'medium') {
@@ -68,23 +68,21 @@ const RestaurantPage = () => {
   }
   if (userInfo.type === 'large') {
     if (restaurants.length > 4) {
-      disable=true
+      disable = true
     }
   }
-  console.log(disable, userInfo.type)
 
   useEffect(() => {
     if (userInfo === null) {
       navigate('/login')
     } else {
-      dispatch(listRestaurants(userInfo._id))
+      dispatch(listRestaurants(userId))
     }
 
     if (successCreate || successDelete) {
-      dispatch(listRestaurants(userInfo._id))
+      dispatch(listRestaurants(userId))
       setShowModel(false)
     }
-    
   }, [dispatch, navigate, successCreate, successDelete, selectRes])
 
   return (
@@ -203,11 +201,17 @@ const RestaurantPage = () => {
                     onClick={() => {
                       setShowModel(true)
                     }}
-                    disabled={disable}                    
+                    disabled={disable}
                   >
                     Thêm Nhà Hàng
                   </button>
-                  {disable&&(<span className='u-margin-top-small'><strong>Lưu Ý: </strong> Số lượng nhà hàng của bạn đã vượt quá số lượng, vui lòng đăng ký gói dịch vụ cao cấp hơn để thêm nhà hàng</span>)}
+                  {disable && (
+                    <span className='u-margin-top-small'>
+                      <strong>Lưu Ý: </strong> Số lượng nhà hàng của bạn đã vượt
+                      quá số lượng, vui lòng đăng ký gói dịch vụ cao cấp hơn để
+                      thêm nhà hàng
+                    </span>
+                  )}
                 </Row>
               </Col>
               <Col
@@ -234,7 +238,7 @@ const RestaurantPage = () => {
               </Col>
             </Row>
           </Container>
-        </> 
+        </>
       )}
     </div>
   )

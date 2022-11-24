@@ -1,18 +1,31 @@
-import mongoos from 'mongoose'
-import colors from 'colors'
+'use strict'
+import dotenv from 'dotenv'
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoos.connect(process.env.MONGO_URI, {
-      //   useUnifiedTopology: true,
-      //   useNewUrlParser: true,
-      //   //   useCreateIndex: true,
-    })
-    console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline)
-  } catch (error) {
-    console.log(`Error: ${error.message}`.red.underline.bold)
-    process.exit(1)
-  }
+dotenv.config()
+
+const {
+  API_KEY,
+  AUTH_DOMAIN,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  APP_ID,
+  MEASUREMENT_ID,
+} = process.env
+
+const firebaseConfig = {
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
 }
 
-export default connectDB
+const app = initializeApp(firebaseConfig)
+export const db = getFirestore(app)
+export const auth = getAuth(app)

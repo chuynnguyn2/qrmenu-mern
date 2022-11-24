@@ -1,9 +1,7 @@
 import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
-import morgan from 'morgan'
 import colors from 'colors'
-import connectDB from './config/db.js'
 import categoryRouter from './routes/categoryRoutes.js'
 import restaurantRouter from './routes/restaurantRoutes.js'
 import userRouter from './routes/userRoutes.js'
@@ -14,15 +12,7 @@ import orderRouter from './routes/orderRoutes.js'
 
 dotenv.config()
 
-connectDB()
-
 const app = express()
-
-app.use(express.json())
-
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'))
-}
 
 app.use(express.json())
 
@@ -32,9 +22,6 @@ app.use('/api/restaurant', restaurantRouter)
 app.use('/api/upload', uploadRouter)
 app.use('/api/order', orderRouter)
 app.use('/api', userRouter)
-
-const __dirname = path.resolve()
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')))

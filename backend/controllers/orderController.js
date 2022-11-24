@@ -1,9 +1,11 @@
+import { db } from '../config/db.js'
+import { doc, setDoc } from 'firebase/firestore'
 import asyncHandler from 'express-async-handler'
-import Order from '../models/orderModel.js'
 
 // @desc    Create new order
 // @route   POST /api/order
-// @access  Private
+// @access  Public
+
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
     orderItems,
@@ -16,28 +18,23 @@ const addOrderItems = asyncHandler(async (req, res) => {
     isDelivered,
     restaurant,
   } = req.body
-
-  if (orderItems && orderItems.length === 0) {
-    res.status(400)
-    throw new Error('No order items')
-    return
-  } else {
-    const order = new Order({
-      orderItems,
-      restaurant,
-      totalPrice,
-    table,
-    shippingAddress,
-    paymentMethod,
-    paymentResult,
-    taxPrice,
-    isDelivered,
-    })
-
-    const createdOrder = await order.save()
-
-    res.status(201).json(createdOrder)
+  const uniqueId = Date.now().toString()
+  const orderRef = doc(db, 'users', restaurant, 'order', uniqueId)
+  const docData = {
+    id: uniqueId,
+    orderItems: orderItems,
+    restaurant: restaurant,
+    totalPrice: totalPrice,
+    table: table,
+    shippingAddress: shippingAddress,
+    paymentMethod: paymentMethod,
+    paymentResult: paymentResult,
+    taxPrice: taxPrice,
+    isDelivered: isDelivered,
   }
+  const createdOrder = await setDoc(orderRef, docData)
+
+  res.status(201).json(createdOrder)
 })
 
 // @desc    Get order by res and table
@@ -75,7 +72,6 @@ const updateOrder = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id)
 
   if (order) {
-    
     order.orderItems = orderItems || order.orderItems
     order.totalPrice = totalPrice || order.totalPrice
     order.table = table || order.table
@@ -86,7 +82,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     order.taxPrice = taxPrice || order.taxPrice
     order.isDelivered = isDelivered || order.isDelivered
     order.restaurant = restaurant || order.restaurant
-    
+
     const updatedOrder = await order.save()
 
     res.json(updatedOrder)
@@ -136,12 +132,12 @@ const updateOrder = asyncHandler(async (req, res) => {
 //   }
 // })
 
-// @desc    Get all orders of one restaurant 
+// @desc    Get all orders of one restaurant
 // @route   GET /api/order?restaurant
 // @access  Private
-const getMyOrders = asyncHandler(async (req, res) => {  
+const getMyOrders = asyncHandler(async (req, res) => {
   let filter = { restaurant: req.query.restaurant }
-  
+
   const orders = await Order.find(filter).populate('restaurant')
   res.json(orders)
 })
@@ -159,5 +155,5 @@ export {
   //getOrderById,
   updateOrder,
   getMyOrders,
-//   getOrders,
+  //   getOrders,
 }

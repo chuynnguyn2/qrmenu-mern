@@ -1,54 +1,36 @@
 import asyncHandler from 'express-async-handler'
-import Restaurant from '../models/restaurantModel.js'
-import User from '../models/userModel.js'
+import { db } from '../config/db.js'
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
 
 // @desc    Fetch all restaurants
 // @route   GET /api/restaurant?user
 //@access   Public
 const getRestaurants = asyncHandler(async (req, res) => {
-  let filter = { user: req.query.user }
+  const user = req.query.user
 
-  const restaurants = await Restaurant.find(filter).populate('user')
+  const collectionRef = collection(db, 'users', user, 'restaurant')
+
+  const querySnapshot = await getDocs(collectionRef)
+  let restaurants = []
+  querySnapshot.forEach((doc) => {
+    restaurants.push(doc.data())
+  })
   res.json(restaurants)
-}) 
-
-// // @desc    Fetch single category
-// // @route   GET /api/restaurant/restaurantId
-// //@access   Public
-// const getRestaurantById = asyncHandler(async (req, res) => {
-//   const restaurant = await Restaurant.findById(req.params.restaurantId)
-//   if (restaurant) {
-//     res.json(restaurant)
-//   } else {
-//     res.status(404)
-//     throw new Error('Restaurant not Found')
-//   }
-// })
+})
 
 // @desc    Create restaurant
 // @route   POST /api/restaurant?user
 //@access   Public
 const createRestaurant = asyncHandler(async (req, res) => {
-  const userExist = User.findById(req.body.user)
-
-  if (!userExist) {
-    res.status(400)
-    throw new Error('Invalid User')
-  }
-
   const { user, name, address, phone } = req.body
+  const uniqueId = Date.now().toString()
+  const docRef = collection(db, 'users', user, 'restaurant', uniqueId)
 
-  const restaurantExists = await Restaurant.findOne({ name })
-
-  if (restaurantExists) {
-    res.status(400)
-    throw new Error('Restaurant already exists')
-  }
-  const restaurant = await Restaurant.create({
-    user,
-    name,
-    address,
-    phone,
+  const restaurant = await setDoc(docRef, {
+    id: uniqueId,
+    name: name,
+    address: address,
+    phone: phone,
   })
 
   if (restaurant) {

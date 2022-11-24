@@ -1,30 +1,21 @@
 import asyncHandler from 'express-async-handler'
-import User from '../models/userModel.js'
-import generateToken from '../utils/generateToken.js'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+const auth = getAuth()
 
 // @desc    Auth user&get token
 // @route   POST /api/users/login
 //@access   Public
 const authUser = asyncHandler(async (req, res) => {
-  const { loginId, password } = req.body
-
-  const user = await User.findOne({phone: loginId  
-  })
-
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      type: user.type,
-      isActive: user.isActive,
-      token: generateToken(user._id),
+  const { email, password } = req.body
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      res.json({
+        user: userCredential.user,
+      })
     })
-  } else {
-    res.status(401)
-    throw new Error('Invalid phone number or password')
-  }
+    .catch((error) => {
+      const errorMessage = error.errorMessage
+    })
 })
 
 // @desc    Get user profile
