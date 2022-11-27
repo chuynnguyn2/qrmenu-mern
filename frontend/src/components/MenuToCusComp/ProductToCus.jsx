@@ -12,44 +12,53 @@ const ProductToCus = ({ categoryId }) => {
   const navigate = useNavigate()
 
   const productList = useSelector((state) => state.productList)
-  const { loading, error, products } = productList  
-  const {totalPrice, setTotalPrice} = useContext(totalPriceContext)
+  const { loading, error, products } = productList
+  const { totalPrice, setTotalPrice } = useContext(totalPriceContext)
 
-  const carts = useSelector((state)=>state.cart)
-  const {cartItems} = carts
+  const carts = useSelector((state) => state.cart)
+  const { cartItems } = carts
 
   let cartProId = []
-  if(cartItems){
-    cartItems.map((i)=>{
+  if (cartItems) {
+    cartItems.map((i) => {
       cartProId.push(i.product)
     })
-  }  
-
-  useEffect(() => {
-    dispatch(listProducts(categoryId))
-  }, [categoryId, dispatch, navigate])  
+  }
 
   return (
-    <div className='p-4' >      
-        <Row>        
-          {products.map((product) => (            
-            <Row key={product._id} className='mb-3 product-row' style={{margin:'0', backgroundColor:'white', borderRadius:'10px'}}>
-              <Product product={product}/>
-              <Button       
-              disabled={cartProId.includes(product._id)}      
-                onClick={() => {
-                  dispatch(addToCart(product._id, 1))
-                  setTotalPrice((totalPrice+product.price))
-                }}    
-                className='product-row-btn '      
-                style={{backgroundColor: '#FF6D28'}}      
+    <div className='p-4'>
+      <Row>
+        {products.map((product) => (
+          <>
+            {product.cat === categoryId || categoryId === '' ? (
+              <Row
+                key={product.id}
+                className='mb-3 product-row'
+                style={{
+                  margin: '0',
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                }}
               >
-                {cartProId.includes(product._id)? ('Đã Chọn') : ('Chọn')}
-              </Button>
-            </Row>
-          )
-          )}          
-        </Row>
+                <Product product={product} />
+                <Button
+                  disabled={cartProId.includes(product.id)}
+                  onClick={() => {
+                    dispatch(addToCart(product.id, 1))
+                    setTotalPrice(totalPrice + product.price)
+                  }}
+                  className='product-row-btn '
+                  style={{ backgroundColor: '#FF6D28' }}
+                >
+                  {cartProId.includes(product.id) ? 'Đã Chọn' : 'Chọn'}
+                </Button>
+              </Row>
+            ) : (
+              <></>
+            )}
+          </>
+        ))}
+      </Row>
     </div>
   )
 }

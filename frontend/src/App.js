@@ -12,12 +12,12 @@ import MenuToCus from './screens/MenuToCus'
 function App() {
   return (
     <BrowserRouter>
-    <NaviSideBar/>
-      <Routes>        
+      <NaviSideBar />
+      <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
-        <Route path='/menu/:restaurantId' element={<MenuToCus />}></Route> 
+        <Route path='/menu/:userUID' element={<MenuToCus />}></Route>
       </Routes>
     </BrowserRouter>
   )
