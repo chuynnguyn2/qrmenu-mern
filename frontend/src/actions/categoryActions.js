@@ -96,7 +96,7 @@ export const updateCategory = (category) => async (dispatch, getState) => {
 
 export const deleteCategory =
   ({ id, user }) =>
-  async (dispatch, getState) => {
+  async (dispatch) => {
     try {
       dispatch({
         type: CATEGORY_DELETE_REQUEST,

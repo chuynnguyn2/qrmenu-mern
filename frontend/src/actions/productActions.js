@@ -115,24 +115,26 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   }
 }
 
-export const deleteProduct = (id, user) => async (dispatch) => {
-  try {
-    dispatch({
-      type: PRODUCT_DELETE_REQUEST,
-    })
+export const deleteProduct =
+  ({ id, user }) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: PRODUCT_DELETE_REQUEST,
+      })
 
-    await axios.delete(`/api/product`)
+      await axios.delete(`/api/product`, { data: { id: id, user: user } })
 
-    dispatch({
-      type: PRODUCT_DELETE_SUCCESS,
-    })
-  } catch (error) {
-    dispatch({
-      type: PRODUCT_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
+      dispatch({
+        type: PRODUCT_DELETE_SUCCESS,
+      })
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_DELETE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
   }
-}

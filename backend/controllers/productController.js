@@ -2,7 +2,14 @@ import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
 import Category from '../models/categoryModel.js'
 import { db } from '../config/db.js'
-import { doc, setDoc, getDocs, getDoc, collection } from 'firebase/firestore'
+import {
+  doc,
+  setDoc,
+  getDocs,
+  getDoc,
+  collection,
+  deleteDoc,
+} from 'firebase/firestore'
 import { runTransaction } from 'firebase/firestore'
 
 // @desc    Fetch all products
@@ -63,16 +70,18 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   DELETE /api/product/:productId
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
-  const catId = req.body
-  const product = await Product.findById(req.params.productId)
+  const { id, user } = req.body
 
-  if (product) {
-    await product.remove()
-    res.json({ catId: catId })
-  } else {
-    res.status(404)
-    throw new Error('Product not found')
-  }
+  const docRef = doc(db, 'users', user, 'food', id)
+
+  await deleteDoc(docRef)
+    .then((data) => {
+      console.log('sucess delete category')
+      res.json(data)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 })
 
 // @desc    Update a product
